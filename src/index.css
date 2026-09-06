@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Campus-Auth Design System
+ * 统一字阶 / 间距 / 暗色 / 动效；首屏 hero 用轻渐变，卡片统一描边与阴影。
+ */
+
+@layer base {
+  :root {
+    --primary: 221 75% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 35 22% 89%;
+    --secondary-foreground: 30 15% 18%;
+    --background: 38 28% 94%;
+    --foreground: 222 18% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 18% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 18% 14%;
+    --muted: 38 18% 88%;
+    --muted-foreground: 222 8% 42%;
+    --accent: 38 20% 90%;
+    --accent-foreground: 222 18% 14%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 38 16% 82%;
+    --input: 38 16% 82%;
+    --ring: 221 75% 52%;
+    --radius: 0.75rem;
+    --success: 152 58% 38%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 18% 14%;
+    --info: 199 78% 44%;
+    --info-foreground: 0 0% 100%;
+    --accent-warm: 221 65% 48%;
+    --accent-warm-foreground: 0 0% 100%;
+    --syntax-function: 265 65% 52%;
+  }
+
+  .dark {
+    --primary: 221 70% 58%;
+    --primary-foreground: 222 18% 10%;
+    --secondary: 222 14% 18%;
+    --secondary-foreground: 38 20% 88%;
+    --background: 222 20% 10%;
+    --foreground: 38 18% 90%;
+    --card: 222 16% 14%;
+    --card-foreground: 38 18% 90%;
+    --popover: 222 16% 12%;
+    --popover-foreground: 38 18% 90%;
+    --muted: 222 12% 18%;
+    --muted-foreground: 38 12% 58%;
+    --accent: 222 12% 18%;
+    --accent-foreground: 38 18% 90%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 38 18% 90%;
+    --border: 222 12% 22%;
+    --input: 222 12% 22%;
+    --ring: 221 70% 58%;
+    --success: 152 52% 44%;
+    --warning: 38 90% 58%;
+    --warning-foreground: 222 18% 10%;
+    --info: 199 78% 56%;
+    --accent-warm: 221 65% 52%;
+    --syntax-function: 265 70% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    overflow-x: clip;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  code, pre {
+    font-family: 'Fira Code', 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  /* 减少动效偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .campus-app-demo {
+    --background: 0 0% 100%;
+    --foreground: 222 18% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 18% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 18% 14%;
+    --primary: 221 75% 52%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222 18% 14%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 18% 14%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 75% 52%;
+    --radius: 0.75rem;
+    --success: 152 58% 38%;
+    --warning: 38 92% 50%;
+    --info: 199 78% 44%;
+    color-scheme: light;
+  }
+  .dark .campus-app-demo {
+    --background: 222 16% 14%;
+    --foreground: 0 0% 98%;
+    --card: 222 16% 16%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 16% 16%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 221 70% 58%;
+    --secondary: 222 14% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 222 14% 20%;
+    --muted-foreground: 220 8% 62%;
+    --accent: 222 14% 20%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62% 30%;
+    --border: 222 12% 24%;
+    --input: 222 12% 24%;
+    --ring: 221 70% 58%;
+    color-scheme: dark;
+  }
+  .campus-app-demo * {
+    scrollbar-width: none;
+  }
+  .campus-app-demo *::-webkit-scrollbar {
+    display: none;
+  }
+  .glass {
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+  }
+  .hero-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(199 78% 44%) 100%);
+  }
+  .glow-primary {
+    box-shadow: 0 10px 40px -10px hsl(var(--primary) / 0.28);
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.3) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.3) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .text-display-md {
+    @apply text-3xl sm:text-4xl md:text-[40px] font-bold tracking-tight leading-[1.15];
+  }
+  .text-display-sm {
+    @apply text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight;
+  }
+  .section-y {
+    @apply py-14 sm:py-16 md:py-24;
+  }
+  .section-card {
+    @apply bg-card border border-border rounded-2xl shadow-sm;
+  }
+  .highlight-hover {
+    @apply transition-all duration-300 hover:shadow-md hover:border-primary/20;
+  }
+  /* 统一卡片与按钮的点击反馈 */
+  .card-press:active {
+    transform: translateY(1px);
+  }
+
+  /* 文档排版 — 轻量 prose，不引 @tailwindcss/typography */
+  .prose-docs :where(h1 + *, h2 + *, h3 + *) { margin-top: 0; }
+  .prose-docs a { @apply underline underline-offset-4 decoration-primary/30 hover:decoration-primary; }
+  .prose-docs pre { @apply border; }
+  .prose-docs :not(pre) > code { @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em] text-primary; }
+  .prose-docs blockquote { @apply border-l-4 border-primary/25 bg-muted/40; }
+  .prose-docs table { @apply w-full text-sm; }
+  .prose-docs th { @apply bg-muted/50 font-semibold; }
+}
+
+/* Prism — 跟随站内 token，不另起主题包 */
+code[class*="language-"],
+pre[class*="language-"] {
+  font-family: 'Fira Code', 'JetBrains Mono', 'SF Mono', monospace;
+  direction: ltr; text-align: left; white-space: pre; word-spacing: normal;
+  word-break: normal; line-height: 1.6; tab-size: 2; hyphens: none;
+  color: hsl(var(--foreground));
+}
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: hsl(var(--muted-foreground)); font-style: italic; }
+.token.punctuation { color: hsl(var(--muted-foreground)); }
+.token.property, .token.tag, .token.boolean, .token.number, .token.constant, .token.symbol, .token.deleted { color: hsl(var(--primary)); }
+.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted { color: hsl(var(--success)); }
+.token.operator, .token.entity, .token.url { color: hsl(var(--warning)); }
+.token.atrule, .token.attr-value, .token.keyword { color: hsl(var(--info)); }
+.token.function, .token.class-name { color: hsl(var(--syntax-function)); }
+.token.regex, .token.important, .token.variable { color: hsl(var(--warning)); }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://campus-auth.misyra.dev</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/download</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/changelog</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=introduction</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=install</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=console</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=quickstart</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=overview</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=match</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=redirect</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=concepts</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=browser</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=variables</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=scripts</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=monitor</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=debug</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=scheduled</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=cli</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=update</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=faq</loc></url>
+</urlset>

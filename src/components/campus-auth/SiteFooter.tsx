@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Github, FileText, Download, MessageCircle, Check } from "lucide-react";
+import { Github, FileText, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SITE } from "@/data/site";
 
@@ -10,8 +10,10 @@ function QqGroupButton() {
   return (
     <a
       href={QQ_GROUP_URL}
-      title="打开 QQ 加入交流群（同时复制群号）"
-      aria-label={`QQ 交流群 ${SITE.qqGroup}，点击打开 QQ 加入`}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="QQ 官方群"
+      aria-label={`QQ 官方群，群号 ${SITE.qqGroup}，点击加入`}
       onClick={() => {
         const done = () => {
           setCopied(true);
@@ -23,10 +25,13 @@ function QqGroupButton() {
           done();
         }
       }}
-      className="inline-flex h-9 items-center gap-1.5 rounded-lg border bg-background px-3 text-sm text-muted-foreground hover:text-foreground"
+      className="inline-flex items-center gap-2.5 rounded-lg border bg-background px-3 py-1.5 hover:text-foreground"
     >
-      {copied ? <Check className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-      {copied ? "群号已复制" : `QQ群 ${SITE.qqGroup}`}
+      <img src="/icons/tencentqq.svg" alt="" aria-hidden="true" loading="lazy" decoding="async" className="h-6 w-6 dark:invert" />
+      <span>
+        <span className="block text-sm font-semibold leading-tight">QQ 官方群</span>
+        <span className="block text-xs leading-tight text-muted-foreground">{copied ? "群号已复制" : `群号：${SITE.qqGroup}`}</span>
+      </span>
     </a>
   );
 }

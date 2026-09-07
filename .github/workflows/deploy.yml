@@ -27,7 +27,17 @@ jobs:
           node-version: 22
           cache: pnpm
 
+      # 缓存 Playwright 浏览器，避免每次构建重复下载
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - run: pnpm install --frozen-lockfile
+
+      # 预渲染需要 Chromium（仅 headless shell，更轻量）
+      - run: pnpm exec playwright install chromium --only-shell
 
       - run: pnpm build
 

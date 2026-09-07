@@ -41,22 +41,23 @@ export default function DocsPage() {
   const [searchParams] = useSearchParams();
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // 旧链接 /docs?section=x&item=y → 路径式 /docs/x/y
+  const { sid, iid } = resolveIds(section, item);
+
+  // URL 规范化（单一 effect，避免多次 navigate 相互覆盖）：
+  // 1) 旧链接 /docs?section=x&item=y → 路径式 /docs/x/y
+  // 2) 非法/缺省组合（/docs、/docs/:section）→ 完整默认文档 URL
   useEffect(() => {
     const ls = searchParams.get("section");
     const li = searchParams.get("item");
-    if (ls) navigate(`/docs/${ls}${li ? `/${li}` : ""}`, { replace: true });
-    else if (li) navigate("/docs", { replace: true });
-  }, [searchParams, navigate]);
-
-  const { sid, iid } = resolveIds(section, item);
-
-  // 非法/缺省组合规范化为完整文档 URL（/docs 与 /docs/:section 会跳到默认文档）
-  useEffect(() => {
+    if (ls || li) {
+      const r = resolveIds(ls ?? undefined, li ?? undefined);
+      navigate(`/docs/${r.sid}/${r.iid}`, { replace: true });
+      return;
+    }
     if (section !== sid || item !== iid) {
       navigate(`/docs/${sid}/${iid}`, { replace: true });
     }
-  }, [section, item, sid, iid, navigate]);
+  }, [searchParams, section, item, sid, iid, navigate]);
 
   // 文档内容构建时已打包，同步取用，无 loading 态
   const content = useMemo(() => getDocContent(sid, iid), [sid, iid]);

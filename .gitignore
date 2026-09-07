@@ -13,3 +13,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# 本地 AI 会话记忆
+.workbuddy/

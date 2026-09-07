@@ -1,6 +1,5 @@
-/download  /  200
-/download/  /  200
-/docs  /  200
-/docs/  /  200
-/changelog  /  200
-/changelog/  /  200
+# 预渲染文件已覆盖全部真实路由；未命中路径由 Cloudflare Pages 自动使用 404.html
+# 此处仅做尾斜杠规范化
+/download/  /download  301
+/changelog/  /changelog  301
+/docs/  /docs  301

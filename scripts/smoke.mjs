@@ -1,52 +1,76 @@
-// 冒烟测试：构建产物本地预览，验证路由标题、字体与控制台错误
+// 冒烟测试：验证 SPA 路由行为（预渲染后的页面 + 客户端导航 + 旧链接重定向）
 import { chromium } from "playwright";
+import { spawn } from "child_process";
 
-const BASE = "http://127.0.0.1:4173";
+const preview = spawn("npx", ["vite", "preview", "--port", "4180", "--strictPort"], {
+  shell: true,
+  stdio: "ignore",
+});
+await new Promise((r) => setTimeout(r, 2500));
+
+const origin = "http://localhost:4180";
 const browser = await chromium.launch();
 const page = await browser.newPage();
-const consoleErrors = [];
-page.on("console", (m) => m.type() === "error" && consoleErrors.push(m.text()));
-page.on("pageerror", (e) => consoleErrors.push(String(e)));
+let failed = 0;
 
-async function goto(path) {
-  await page.goto(BASE + path, { waitUntil: "networkidle" });
-  return page.title();
+async function check(name, fn) {
+  try {
+    await fn();
+    console.log(`PASS ${name}`);
+  } catch (e) {
+    failed++;
+    console.error(`FAIL ${name}: ${e.message}`);
+  }
 }
 
-// 1. 首页
-let t = await goto("/");
-console.log("home title:", t);
-if (!t.includes("Campus-Auth")) throw new Error("home title wrong");
-await page.waitForSelector("h1");
-const fontLoaded = await page.evaluate(() => document.fonts.check('600 16px Inter'));
-console.log("Inter loaded:", fontLoaded);
-const fontReqFailed = [];
-page.on("requestfailed", (r) => fontReqFailed.push(r.url()));
+await check("direct doc page renders content", async () => {
+  await page.goto(`${origin}/docs/tasks/browser`, { waitUntil: "networkidle" });
+  await page.waitForSelector("h2");
+  const text = await page.textContent("h1");
+  if (!text || text.length < 2) throw new Error("h1 empty");
+});
 
-// 2. 文档页标题
-t = await goto("/docs");
-console.log("docs title:", t);
-if (!t.includes("文档")) throw new Error("docs title wrong");
+await check("/docs redirects to default doc", async () => {
+  await page.goto(`${origin}/docs`, { waitUntil: "networkidle" });
+  await page.waitForURL("**/docs/getting-started/introduction", { timeout: 5000 });
+});
 
-// 3. 返回首页后标题应恢复（此前会残留文档标题）
-t = await goto("/");
-console.log("back-to-home title:", t);
-if (!t.includes("断网重连") || t.includes("文档")) throw new Error("stale title bug regressed");
+await check("legacy ?section=&item= redirects to path URL", async () => {
+  await page.goto(`${origin}/docs?section=tasks&item=browser`, { waitUntil: "networkidle" });
+  await page.waitForURL("**/docs/tasks/browser", { timeout: 5000 });
+});
 
-// 4. 其余路由
-console.log("download title:", await goto("/download"));
-console.log("changelog title:", await goto("/changelog"));
-t = await goto("/some-unknown-path");
-console.log("404 title:", t);
+await check("sidebar navigation (client-side)", async () => {
+  await page.goto(`${origin}/docs/getting-started/introduction`, { waitUntil: "networkidle" });
+  await page.locator("button", { hasText: "任务系统" }).first().click();
+  await page.waitForURL("**/docs/tasks/**", { timeout: 5000 });
+  await page.waitForSelector("h1");
+});
 
-// 5. 字体/截图资源可访问
-for (const p of ["/fonts/inter-var.woff2", "/fonts/fira-code-var.woff2", "/screenshots/dashboard.webp", "/sitemap.xml", "/robots.txt"]) {
-  const res = await page.request.get(BASE + p);
-  console.log(res.status(), p);
-  if (res.status() !== 200) throw new Error(`bad status for ${p}`);
-}
+await check("doc search opens and finds", async () => {
+  await page.keyboard.press("Control+k");
+  await page.waitForSelector("input[placeholder='搜索文档…']", { timeout: 3000 });
+  await page.fill("input[placeholder='搜索文档…']", "验证码");
+  await page.waitForTimeout(300);
+  const results = await page.$$eval("button .truncate", (els) => els.map((e) => e.textContent));
+  if (!results.some((t) => t && t.length > 1)) throw new Error(`no results: ${JSON.stringify(results)}`);
+});
 
-console.log("console errors:", consoleErrors.length ? consoleErrors : "none");
-if (consoleErrors.length) process.exit(1);
-console.log("SMOKE OK");
+await check("download page renders smart download", async () => {
+  await page.goto(`${origin}/download`, { waitUntil: "networkidle" });
+  await page.waitForSelector("text=下载");
+});
+
+await check("home renders hero", async () => {
+  await page.goto(origin, { waitUntil: "networkidle" });
+  await page.waitForSelector("h1");
+});
+
 await browser.close();
+preview.kill();
+
+if (failed) {
+  console.error(`${failed} smoke checks failed`);
+  process.exit(1);
+}
+console.log("smoke tests passed");

@@ -23,11 +23,10 @@ await sharp({ create: { width: 180, height: 180, channels: 4, background: "#ffff
   .png({ palette: true, compressionLevel: 9 })
   .toFile("public/apple-touch-icon.png");
 
-// og:image 1200×630：浅底 + logo + 站名
+// og:image 1200×630：浅底 + logo + 站名（注意：SVG 只含文字，不得带背景矩形，否则会盖住 logo）
 const logo320 = await sharp(SRC).resize(300, 300).toBuffer();
 const text = Buffer.from(`
 <svg width="1200" height="630">
-  <rect width="1200" height="630" fill="#f8fafc"/>
   <text x="600" y="520" text-anchor="middle" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="72" font-weight="700" fill="#0f172a">Campus-Auth</text>
   <text x="600" y="578" text-anchor="middle" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="34" fill="#475569">校园网小助手 · 断网重连 · 全天候在线</text>
 </svg>`);

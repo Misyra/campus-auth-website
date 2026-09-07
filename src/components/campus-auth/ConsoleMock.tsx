@@ -142,8 +142,19 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
   const [loginBusy, setLoginBusy] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const logViewerRef = useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const tickRef = useRef(0);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [inViewport, setInViewport] = useState(true);
+
+  // 首屏外（滚动离开视口）暂停演示定时器，避免常驻 CPU 占用
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInViewport(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   function showToast(msg: string) {
     setToast(msg);
@@ -155,9 +166,9 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
     setLogs((l) => [...l.slice(-99), makeLog(level, source, msg)]);
   }
 
-  // 监控运行中：运行时长每秒累计；每 5s 一次周期检测（计数 + 时间 + 日志）
+  // 监控运行中：运行时长每秒累计；每 5s 一次周期检测（计数 + 时间 + 日志）；视口外暂停
   useEffect(() => {
-    if (!monitoring) return;
+    if (!monitoring || !inViewport) return;
     const id = setInterval(() => {
       setSeconds((s) => s + 1);
       tickRef.current += 1;
@@ -168,7 +179,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
       }
     }, 1000);
     return () => clearInterval(id);
-  }, [monitoring]);
+  }, [monitoring, inViewport]);
 
   // 日志自动滚动
   useEffect(() => {
@@ -313,7 +324,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
   ];
 
   return (
-    <div className="relative flex aspect-video w-full overflow-hidden bg-card text-foreground">
+    <div ref={rootRef} className="relative flex aspect-video w-full overflow-hidden bg-card text-foreground">
       {sidebar}
 
       <div className="flex min-w-0 flex-1 flex-col">

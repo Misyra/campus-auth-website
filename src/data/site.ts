@@ -7,6 +7,7 @@ export const SITE = {
   version: "5.0.0-alpha.8",
   repo: "https://github.com/Misyra/Campus-Auth-rs",
   releaseBase: "https://github.com/Misyra/Campus-Auth-rs/releases",
+  qqGroup: "1105307735",
   docsUrl: "/docs",
   defaultPort: 50721,
 } as const;

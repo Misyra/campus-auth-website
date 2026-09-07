@@ -1,6 +1,35 @@
-import { Github, FileText, Download } from "lucide-react";
+import { useState } from "react";
+import { Github, FileText, Download, MessageCircle, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SITE } from "@/data/site";
+
+const QQ_GROUP_URL = `mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${SITE.qqGroup}&card_type=group&source=qrcode`;
+
+function QqGroupButton() {
+  const [copied, setCopied] = useState(false);
+  return (
+    <a
+      href={QQ_GROUP_URL}
+      title="打开 QQ 加入交流群（同时复制群号）"
+      aria-label={`QQ 交流群 ${SITE.qqGroup}，点击打开 QQ 加入`}
+      onClick={() => {
+        const done = () => {
+          setCopied(true);
+          window.setTimeout(() => setCopied(false), 1600);
+        };
+        if (navigator.clipboard?.writeText) {
+          navigator.clipboard.writeText(SITE.qqGroup).then(done).catch(done);
+        } else {
+          done();
+        }
+      }}
+      className="inline-flex h-9 items-center gap-1.5 rounded-lg border bg-background px-3 text-sm text-muted-foreground hover:text-foreground"
+    >
+      {copied ? <Check className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+      {copied ? "群号已复制" : `QQ群 ${SITE.qqGroup}`}
+    </a>
+  );
+}
 
 export function SiteFooter() {
   return (
@@ -32,10 +61,11 @@ export function SiteFooter() {
                 <li><Link to="/docs?section=tasks&item=browser" className="hover:text-foreground">任务编写</Link></li>
               </ul>
             </div>
-            <div className="flex items-start gap-2 pt-1">
+            <div className="flex flex-wrap items-start gap-2 pt-1">
               <a href={SITE.repo} target="_blank" rel="noreferrer" aria-label="GitHub" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background"><Github className="h-4 w-4" /></a>
               <a href={SITE.releaseBase} target="_blank" rel="noreferrer" aria-label="Releases" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background"><Download className="h-4 w-4" /></a>
               <Link to={SITE.docsUrl} aria-label="Docs" className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background"><FileText className="h-4 w-4" /></Link>
+              <QqGroupButton />
             </div>
           </div>
         </div>

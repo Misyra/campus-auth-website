@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "campus-auth-website",
   "compatibility_date": "2026-09-01",
   "routes": [
     { "pattern": "0d00.me/*", "zone_name": "0d00.me" },

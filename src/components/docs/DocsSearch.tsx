@@ -3,14 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, FileText, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DOC_SECTIONS } from "@/content/docs/navigation";
-import { fetchDocContent } from "@/content/docs";
+import { getDocContent } from "@/content/docs";
 
 type Hit = { sid: string; iid?: string; title: string; group: string; excerpt?: string };
 
 export function DocsSearch({ isOpen, onClose, onNavigate }: { isOpen: boolean; onClose: () => void; onNavigate: (sid: string, iid?: string) => void }) {
   const [q, setQ] = useState("");
   const [idx, setIdx] = useState(0);
-  const [bodyHits, setBodyHits] = useState<Hit[]>([]);
 
   const titleIndex = useMemo(() => {
     const out: Hit[] = [];
@@ -21,43 +20,28 @@ export function DocsSearch({ isOpen, onClose, onNavigate }: { isOpen: boolean; o
     return out;
   }, []);
 
-  const titleFiltered = useMemo(() => {
+  // 文档已打包进 bundle：标题 + 正文检索全部同步完成
+  const filtered = useMemo(() => {
     if (!q.trim()) return titleIndex.slice(0, 8);
     const low = q.toLowerCase();
-    return titleIndex.filter((x) => x.title.toLowerCase().includes(low)).slice(0, 8);
-  }, [q, titleIndex]);
-
-  // 正文检索：仅在无标题命中时触发，按需拉 md 文本匹配 excerpt
-  useEffect(() => {
-    if (!isOpen || !q.trim() || titleFiltered.length > 0) {
-      setBodyHits([]);
-      return;
-    }
-    let cancelled = false;
-    const low = q.toLowerCase();
-    (async () => {
-      const out: Hit[] = [];
-      for (const s of DOC_SECTIONS) {
-        for (const it of s.items) {
-          if (out.length >= 8) break;
-          const md = await fetchDocContent(s.id, it.id);
-          const plain = md.replace(/[#*`>[\]()]/g, " ").toLowerCase();
-          const pos = plain.indexOf(low);
-          if (pos >= 0) {
-            const start = Math.max(0, pos - 32);
-            const excerpt = plain.slice(start, start + 72).replace(/\s+/g, " ").trim();
-            out.push({ sid: s.id, iid: it.id, title: it.title, group: s.title, excerpt });
-          }
+    const titleHits = titleIndex.filter((x) => x.title.toLowerCase().includes(low)).slice(0, 8);
+    if (titleHits.length > 0) return titleHits;
+    const out: Hit[] = [];
+    for (const s of DOC_SECTIONS) {
+      for (const it of s.items) {
+        if (out.length >= 8) break;
+        const md = getDocContent(s.id, it.id);
+        const plain = md.replace(/[#*`>[\]()]/g, " ").toLowerCase();
+        const pos = plain.indexOf(low);
+        if (pos >= 0) {
+          const start = Math.max(0, pos - 32);
+          const excerpt = plain.slice(start, start + 72).replace(/\s+/g, " ").trim();
+          out.push({ sid: s.id, iid: it.id, title: it.title, group: s.title, excerpt });
         }
       }
-      if (!cancelled) setBodyHits(out.slice(0, 8));
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [isOpen, q, titleFiltered.length]);
-
-  const filtered = titleFiltered.length > 0 ? titleFiltered : bodyHits;
+    }
+    return out.slice(0, 8);
+  }, [q, titleIndex]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -85,7 +69,6 @@ export function DocsSearch({ isOpen, onClose, onNavigate }: { isOpen: boolean; o
     if (isOpen) {
       setQ("");
       setIdx(0);
-      setBodyHits([]);
     }
   }, [isOpen]);
 

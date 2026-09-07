@@ -9,8 +9,8 @@ export default function DownloadPage() {
     path: "/download",
   });
   return (
-    <main className="pt-16 md:pt-[72px]">
+    <div className="pt-16 md:pt-[72px]">
       <DownloadSection />
-    </main>
+    </div>
   );
 }

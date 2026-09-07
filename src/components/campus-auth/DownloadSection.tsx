@@ -3,7 +3,7 @@ import { SmartDownload } from "./SmartDownload";
 
 export function DownloadSection() {
   return (
-    <section id="download" className="section-y bg-muted/30">
+    <section id="download" className="section-y scroll-mt-24 bg-muted/30">
       <div className="container max-w-[1080px]">
         <SectionHeader title="下载" subtitle="自动识别你的系统，一键直达 GitHub 最新发布；展开可看全部平台与校验方式。" />
         <SmartDownload />

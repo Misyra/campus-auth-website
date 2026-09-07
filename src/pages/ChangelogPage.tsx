@@ -11,7 +11,7 @@ export default function ChangelogPage() {
     path: "/changelog",
   });
   return (
-    <main className="pt-[64px] md:pt-[68px]">
+    <div className="pt-[64px] md:pt-[68px]">
       <div className="container max-w-[820px] py-12 md:py-16">
         <h1 className="text-display-sm">更新日志</h1>
         <p className="mt-3 text-sm text-muted-foreground">
@@ -39,7 +39,7 @@ export default function ChangelogPage() {
             <p className="mt-2 text-sm text-muted-foreground">正式版基线，四端统一与全面检查修复。</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/docs?section=system&item=update" className="inline-flex h-10 items-center rounded-full border bg-card px-5 text-sm font-medium hover:bg-accent">
+            <Link to="/docs/system/update" className="inline-flex h-10 items-center rounded-full border bg-card px-5 text-sm font-medium hover:bg-accent">
               查看站内文档
             </Link>
             <a href={`${SITE.repo}/releases`} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">
@@ -48,6 +48,6 @@ export default function ChangelogPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -30,7 +30,7 @@ export function SiteFooter() {
               <p className="font-semibold">资源</p>
               <ul className="mt-3 space-y-2 text-muted-foreground">
                 <li><Link to={SITE.docsUrl} className="hover:text-foreground">使用文档</Link></li>
-                <li><Link to="/docs?section=tasks&item=browser" className="hover:text-foreground">任务编写</Link></li>
+                <li><Link to="/docs/tasks/browser" className="hover:text-foreground">任务编写</Link></li>
               </ul>
             </div>
             <div className="flex flex-wrap items-start gap-2 pt-1">

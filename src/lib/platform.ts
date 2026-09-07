@@ -65,8 +65,3 @@ export function assetNameForTarget(tag: string, target: ReleaseTarget): string {
 export function latestDownloadUrl(assetName: string): string {
   return `https://github.com/Misyra/Campus-Auth-rs/releases/latest/download/${assetName}`;
 }
-
-export function taggedDownloadUrl(tag: string, assetName: string): string {
-  const v = tag.startsWith("v") ? tag : `v${tag}`;
-  return `https://github.com/Misyra/Campus-Auth-rs/releases/download/${v}/${assetName}`;
-}

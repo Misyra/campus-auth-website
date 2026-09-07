@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { SITE } from "@/data/site";
+import { BUILD_TIME_RELEASE } from "@/generated/release";
 
 type LatestRelease = {
   tag: string;
@@ -7,15 +8,19 @@ type LatestRelease = {
   published_at: string;
 } | null;
 
+// 构建时已注入最新 release（见 scripts/fetch-release.mjs），首屏零等待、零请求；
+// 运行时仅做后台刷新：发布新版本但网站未重建时，能连上 GitHub 的用户仍能看到最新 tag。
+// GitHub API 未认证限流 60 次/小时/IP；国内基本不通，失败静默即可。
+const REQUEST_TIMEOUT_MS = 4000;
+
 let releasePromise: Promise<LatestRelease> | null = null;
 
-// 模块级缓存：同一次会话里多个组件（导航栏 / Hero / 下载区）共用一次请求，
-// 失败时清空缓存以便下次挂载重试
 function fetchLatestRelease(): Promise<LatestRelease> {
   if (!releasePromise) {
     releasePromise = (async () => {
-      const res = await fetch("https://api.github.com/repos/Misyra/Campus-Auth-rs/releases/latest", {
+      const res = await fetch(`https://api.github.com/repos/${SITE.repo.replace("https://github.com/", "")}/releases/latest`, {
         headers: { Accept: "application/vnd.github+json" },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
       if (!res.ok) throw new Error(`GitHub API ${res.status}`);
       const data = (await res.json()) as { tag_name: string; name: string; published_at: string };
@@ -28,29 +33,28 @@ function fetchLatestRelease(): Promise<LatestRelease> {
   return releasePromise;
 }
 
+// 构建时注入的值；为空（构建机也连不上 GitHub）时回落内置版本号
+const INITIAL: LatestRelease = BUILD_TIME_RELEASE.tag ? BUILD_TIME_RELEASE : null;
+const FALLBACK_TAG = INITIAL?.tag ?? `v${SITE.version}`;
+
 export function useLatestRelease() {
-  const [release, setRelease] = useState<LatestRelease>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [release, setRelease] = useState<LatestRelease>(INITIAL);
 
   useEffect(() => {
     let cancelled = false;
     fetchLatestRelease().then(
       (r) => {
-        if (!cancelled) setRelease(r);
+        if (!cancelled && r) setRelease(r);
       },
-      (e) => {
-        if (!cancelled) setError(e instanceof Error ? e.message : String(e));
+      () => {
+        // 静默失败：构建时注入的值已在展示
       },
-    ).finally(() => {
-      if (!cancelled) setLoading(false);
-    });
+    );
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // fallback to embedded version if API unavailable
-  const tag = release?.tag ?? `v${SITE.version}`;
-  return { release, tag, loading, error };
+  const tag = release?.tag ?? FALLBACK_TAG;
+  return { release, tag };
 }

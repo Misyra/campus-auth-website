@@ -10,6 +10,7 @@ import { DocsMobileNav } from "@/components/docs/DocsMobileNav";
 import { DocsSearch } from "@/components/docs/DocsSearch";
 import { MarkdownRenderer } from "@/components/docs/MarkdownRenderer";
 import { TableOfContents } from "@/components/docs/TableOfContents";
+import { QqGroupCard } from "@/components/campus-auth/QqGroup";
 
 type Flat = { sid: string; iid: string; title: string };
 
@@ -161,6 +162,7 @@ export default function DocsPage() {
             <div className="hidden w-56 shrink-0 xl:block">
               <div className="sticky top-24">
                 <TableOfContents content={content} />
+                <QqGroupCard />
               </div>
             </div>
           </div>

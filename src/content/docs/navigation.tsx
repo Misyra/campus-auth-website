@@ -25,7 +25,7 @@ export const DOC_SECTIONS: DocSection[] = [
     title: "多网络配置",
     icon: <ShieldCheck className="h-4 w-4" />,
     items: [
-      { id: "overview", title: "Profile 概览" },
+      { id: "overview", title: "配置方案概览" },
       { id: "match", title: "自动匹配" },
       { id: "redirect", title: "重定向模式" },
     ],

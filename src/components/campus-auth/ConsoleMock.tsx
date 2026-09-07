@@ -202,7 +202,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
       pushLog("INFO", "login", "登录成功（演示模式）");
       setLoginCount((c) => c + 1);
       setHistory((h) =>
-        [{ time: fmtFull(new Date()), duration: "4.2s", profile: "默认方案", source: "手动登录", ok: true }, ...h].slice(0, 8),
+        [{ time: fmtFull(new Date()), duration: "4.2s", profile: "默认配置方案", source: "手动登录", ok: true }, ...h].slice(0, 8),
       );
       setLoginBusy(false);
       showToast("手动登录完成（演示）");

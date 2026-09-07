@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Link } from "react-router-dom";
 import { Check, Copy } from "lucide-react";
-import { cn, slugify } from "@/lib/utils";
+import { cn, nodeText, slugify } from "@/lib/utils";
 
 type PrismModule = typeof import("prismjs");
 
@@ -92,38 +93,43 @@ function CodeBlock({ className, children }: { className?: string; children: stri
   );
 }
 
+/** 标题 id 统一走 nodeText：标题含 `code` / **加粗** 时 String(children) 会退化成
+ *  "[object Object]"，与 TableOfContents 从 markdown 原文解析出的 id 对不上 */
+function headingId(children: React.ReactNode): string {
+  return slugify(nodeText(children));
+}
+
 export function MarkdownRenderer({ content, className }: { content: string; className?: string }) {
   return (
     <div className={cn("prose-docs max-w-full [overflow-wrap:break-word]", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
-          h1: ({ children }) => {
-            const id = slugify(String(children));
+          h1: ({ children }) => (
+            <h1 id={headingId(children)} className="mb-6 mt-8 scroll-mt-24 border-b border-border pb-4 text-3xl font-bold first:mt-0 md:text-4xl">
+              {children}
+            </h1>
+          ),
+          h2: ({ children }) => <h2 id={headingId(children)} className="mb-4 mt-10 scroll-mt-24 text-2xl font-semibold md:text-3xl">{children}</h2>,
+          h3: ({ children }) => <h3 id={headingId(children)} className="mb-3 mt-8 scroll-mt-24 text-xl font-semibold md:text-2xl">{children}</h3>,
+          h4: ({ children }) => <h4 id={headingId(children)} className="mb-2 mt-6 scroll-mt-24 text-lg font-semibold">{children}</h4>,
+          p: ({ children }) => <p className="mb-4 leading-7 text-muted-foreground [overflow-wrap:break-word]">{children}</p>,
+          a: ({ href, children }) => {
+            const cls = "text-primary underline underline-offset-4 hover:text-primary/80";
+            // 文档内链被改写成 ?section=&item=，走路由而非原生 <a>，避免整页刷新
+            if (href?.startsWith("?")) {
+              return (
+                <Link to={href} className={cls}>
+                  {children}
+                </Link>
+              );
+            }
             return (
-              <h1 id={id} className="mb-6 mt-8 scroll-mt-24 border-b border-border pb-4 text-3xl font-bold first:mt-0 md:text-4xl">
+              <a href={href} className={cls} target={href?.startsWith("http") ? "_blank" : undefined} rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}>
                 {children}
-              </h1>
+              </a>
             );
           },
-          h2: ({ children }) => {
-            const id = slugify(String(children));
-            return <h2 id={id} className="mb-4 mt-10 scroll-mt-24 text-2xl font-semibold md:text-3xl">{children}</h2>;
-          },
-          h3: ({ children }) => {
-            const id = slugify(String(children));
-            return <h3 id={id} className="mb-3 mt-8 scroll-mt-24 text-xl font-semibold md:text-2xl">{children}</h3>;
-          },
-          h4: ({ children }) => {
-            const id = slugify(String(children));
-            return <h4 id={id} className="mb-2 mt-6 scroll-mt-24 text-lg font-semibold">{children}</h4>;
-          },
-          p: ({ children }) => <p className="mb-4 leading-7 text-muted-foreground [overflow-wrap:break-word]">{children}</p>,
-          a: ({ href, children }) => (
-            <a href={href} className="text-primary underline underline-offset-4 hover:text-primary/80" target={href?.startsWith("http") ? "_blank" : undefined} rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}>
-              {children}
-            </a>
-          ),
           ul: ({ children }) => <ul className="mb-4 ml-5 list-disc space-y-2 text-muted-foreground sm:ml-6">{children}</ul>,
           ol: ({ children }) => <ol className="mb-4 ml-5 list-decimal space-y-2 text-muted-foreground sm:ml-6">{children}</ol>,
           li: ({ children }) => <li className="leading-7">{children}</li>,
@@ -148,7 +154,7 @@ export function MarkdownRenderer({ content, className }: { content: string; clas
           th: ({ children }) => <th className="border-b px-3 py-3 text-left align-top text-sm font-semibold sm:px-4">{children}</th>,
           td: ({ children }) => <td className="border-b px-3 py-3 align-top text-sm text-muted-foreground [overflow-wrap:break-word] sm:px-4">{children}</td>,
           hr: () => <hr className="my-8 border-border" />,
-          img: ({ src, alt }) => <img src={src} alt={alt} className="my-6 max-w-full rounded-xl border shadow-lg" />,
+          img: ({ src, alt }) => <img src={src} alt={alt} loading="lazy" decoding="async" className="my-6 max-w-full rounded-xl border shadow-lg" />,
         }}
       >
         {content}

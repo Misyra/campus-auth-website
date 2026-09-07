@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { DOC_SECTIONS } from "@/content/docs/navigation";
-import { fetchDocContent, getDocFilePath } from "@/content/docs";
-import { setPageDescription } from "@/hooks/usePageMeta";
+import { getDocContent } from "@/content/docs";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileNav } from "@/components/docs/DocsMobileNav";
 import { DocsSearch } from "@/components/docs/DocsSearch";
@@ -14,8 +14,8 @@ import { QqGroupCard } from "@/components/campus-auth/QqGroup";
 
 type Flat = { sid: string; iid: string; title: string };
 
-// 兼容旧书签
-function resolveIds(section: string | null, item: string | null): { sid: string; iid: string } {
+// 兼容旧书签（?section=/&item= 时代的非法/改名组合回落）
+function resolveIds(section: string | undefined, item: string | undefined): { sid: string; iid: string } {
   if (section === "automation" && item === "debug") {
     section = "tasks";
   }
@@ -32,50 +32,42 @@ function resolveIds(section: string | null, item: string | null): { sid: string;
 function titleFor(sid: string, iid: string): string {
   const g = DOC_SECTIONS.find((s) => s.id === sid);
   const it = g?.items.find((x) => x.id === iid);
-  return it ? `${it.title} — ${g!.title} · Campus-Auth 文档` : `${g?.title ?? "文档"} · Campus-Auth`;
+  return it ? `${it.title} — ${g!.title} · Campus-Auth 文档` : `${g?.title ?? "文档"} · Campus-Auth 文档`;
 }
 
 export default function DocsPage() {
-  const [params, setParams] = useSearchParams();
-  const initial = resolveIds(params.get("section"), params.get("item"));
-  const [sid, setSid] = useState(initial.sid);
-  const [iid, setIid] = useState(initial.iid);
-  const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { section, item } = useParams();
+  const [searchParams] = useSearchParams();
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // 同步外部 URL（如直接打开 /docs?section=tasks&item=browser）时的非法参数回落
+  // 旧链接 /docs?section=x&item=y → 路径式 /docs/x/y
   useEffect(() => {
-    const { sid: nsid, iid: niid } = resolveIds(params.get("section"), params.get("item"));
-    if (nsid !== sid || niid !== iid) {
-      setSid(nsid);
-      setIid(niid);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]);
+    const ls = searchParams.get("section");
+    const li = searchParams.get("item");
+    if (ls) navigate(`/docs/${ls}${li ? `/${li}` : ""}`, { replace: true });
+    else if (li) navigate("/docs", { replace: true });
+  }, [searchParams, navigate]);
 
+  const { sid, iid } = resolveIds(section, item);
+
+  // 非法/缺省组合规范化为完整文档 URL（/docs 与 /docs/:section 会跳到默认文档）
   useEffect(() => {
-    // 非法组合直接回落到已解析的 sid/iid
-    const fp = getDocFilePath(sid, iid);
-    if (!fp) {
-      const fb = resolveIds(null, null);
-      setSid(fb.sid);
-      setIid(fb.iid);
-      return;
+    if (section !== sid || item !== iid) {
+      navigate(`/docs/${sid}/${iid}`, { replace: true });
     }
-    setLoading(true);
-    document.title = titleFor(sid, iid);
-    setPageDescription("Campus-Auth 中文文档：安装上手、配置方案、认证任务、自动化与系统设置。");
-    fetchDocContent(sid, iid).then((c) => {
-      setContent(c);
-      setLoading(false);
-    });
-    const p = new URLSearchParams();
-    p.set("section", sid);
-    p.set("item", iid);
-    setParams(p, { replace: true });
-    window.scrollTo(0, 0);
-  }, [sid, iid, setParams]);
+  }, [section, item, sid, iid, navigate]);
+
+  // 文档内容构建时已打包，同步取用，无 loading 态
+  const content = useMemo(() => getDocContent(sid, iid), [sid, iid]);
+
+  // 文档页每个 section/item 是独立 URL：canonical 必须自引用，否则 sitemap 里的
+  // 24 个文档 URL 会被判成重复页
+  usePageMeta({
+    title: titleFor(sid, iid),
+    description: "Campus-Auth 中文文档：安装上手、配置方案、认证任务、自动化与系统设置。",
+    path: `/docs/${sid}/${iid}`,
+  });
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -88,12 +80,17 @@ export default function DocsPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const onNavigate = useCallback((nsid: string, niid?: string) => {
-    const g = DOC_SECTIONS.find((x) => x.id === nsid);
-    const nid = niid ?? g?.items[0]?.id ?? DOC_SECTIONS[0].items[0].id;
-    setSid(nsid);
-    setIid(nid);
-  }, []);
+  // 提示键按平台显示 ⌘ / Ctrl
+  const modKey = useMemo(() => (/mac|iphone|ipad/i.test(navigator.userAgent) ? "⌘" : "Ctrl"), []);
+
+  const onNavigate = useCallback(
+    (nsid: string, niid?: string) => {
+      const g = DOC_SECTIONS.find((x) => x.id === nsid);
+      const nid = niid ?? g?.items[0]?.id ?? DOC_SECTIONS[0].items[0].id;
+      navigate(`/docs/${nsid}/${nid}`);
+    },
+    [navigate],
+  );
 
   const flat: Flat[] = useMemo(() => {
     const out: Flat[] = [];
@@ -114,21 +111,15 @@ export default function DocsPage() {
               <button onClick={() => setSearchOpen(true)} className="mb-4 flex w-full items-center gap-2 rounded-lg border bg-muted/50 px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground">
                 <Search className="h-4 w-4" />
                 <span className="flex-1 text-left">搜索文档…</span>
-                <kbd className="rounded border bg-background px-1.5 py-0.5 text-xs">⌘K</kbd>
+                <kbd className="rounded border bg-background px-1.5 py-0.5 text-xs">{modKey} K</kbd>
               </button>
               <DocsSidebar sections={DOC_SECTIONS} activeSection={sid} activeItem={iid} onNavigate={onNavigate} />
             </div>
 
-            <main className="min-w-0 flex-1">
+            <div className="min-w-0 flex-1">
               <motion.article key={`${sid}-${iid}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="max-w-none xl:max-w-3xl">
                 <div className="pb-8">
-                  {loading ? (
-                    <div className="flex justify-center py-12">
-                      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-primary" />
-                    </div>
-                  ) : (
-                    <MarkdownRenderer content={content} />
-                  )}
+                  <MarkdownRenderer content={content} />
                 </div>
                 <div className="mt-8 border-t pt-6">
                   <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
@@ -157,7 +148,7 @@ export default function DocsPage() {
                   </div>
                 </div>
               </motion.article>
-            </main>
+            </div>
 
             <div className="hidden w-56 shrink-0 xl:block">
               <div className="sticky top-24">

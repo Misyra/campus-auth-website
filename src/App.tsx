@@ -12,18 +12,34 @@ const NotFound = lazy(() => import("@/pages/NotFound"));
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
   useEffect(() => {
-    if (hash) {
+    // instant：不继承 html 的 scroll-behavior: smooth，换页应瞬移
+    const toTop = () => window.scrollTo({ top: 0, behavior: "instant" });
+    if (!hash) {
+      toTop();
+      return;
+    }
+    // 目标可能在懒加载的路由里，首帧还不存在；用 rAF 轮询等它挂载（约 0.5s 上限）
+    let raf = 0;
+    let tries = 0;
+    const tryScroll = () => {
+      let el: Element | null = null;
       try {
-        const el = document.querySelector(hash);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-          return;
-        }
+        el = document.querySelector(hash);
       } catch {
         // 非法选择器（URL 中异常 hash）按无锚点处理
       }
-    }
-    window.scrollTo(0, 0);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      if (tries++ < 30) {
+        raf = requestAnimationFrame(tryScroll);
+      } else {
+        toTop();
+      }
+    };
+    tryScroll();
+    return () => cancelAnimationFrame(raf);
   }, [pathname, hash]);
   return null;
 }
@@ -38,7 +54,10 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/download" element={<DownloadPage />} />
+            {/* /docs 与 /docs/:section 由 DocsPage 内部规范化跳转到 /docs/:section/:item */}
             <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/:section" element={<DocsPage />} />
+            <Route path="/docs/:section/:item" element={<DocsPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

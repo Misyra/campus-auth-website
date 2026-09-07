@@ -45,11 +45,11 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
   },
 };
 
-const DOC_CACHE: Record<string, string> = {};
+// 文档源文件构建时打包进 bundle（eager raw glob），运行时零网络请求、切换零延迟
+const RAW_DOCS = import.meta.glob("./zh/**/*.md", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
 
 const MSG = {
   notFound: "# 页面不存在\n\n请求的文档不存在。",
-  loadFailed: "# 加载失败\n\n文档加载失败，请稍后重试。",
 } as const;
 
 const DOC_ROUTE_BY_PATH = new Map<string, { sectionId: string; itemId: string }>();
@@ -60,16 +60,11 @@ for (const [sid, items] of Object.entries(DOC_PATH_MAP)) {
   }
 }
 
-function getRelative(sectionId: string, itemId?: string): string | null {
+export function getRelative(sectionId: string, itemId?: string): string | null {
   const s = DOC_PATH_MAP[sectionId];
   if (!s) return null;
   if (itemId && s[itemId]) return s[itemId];
   return s.default ?? null;
-}
-
-export function getDocFilePath(sectionId: string, itemId?: string): string | null {
-  const rel = getRelative(sectionId, itemId);
-  return rel ? `/docs/zh/${rel}` : null;
 }
 
 function resolveDocLink(currentRel: string, href: string): string {
@@ -77,8 +72,8 @@ function resolveDocLink(currentRel: string, href: string): string {
   const resolved = new URL(raw, `https://campus-auth.local/${currentRel}`).pathname.replace(/^\//, "");
   const route = DOC_ROUTE_BY_PATH.get(resolved);
   if (!route) return href;
-  const q = `?section=${encodeURIComponent(route.sectionId)}&item=${encodeURIComponent(route.itemId)}`;
-  return hash ? `${q}#${hash}` : q;
+  const path = `/docs/${route.sectionId}/${route.itemId}`;
+  return hash ? `${path}#${hash}` : path;
 }
 
 function processContent(content: string, currentRel: string): string {
@@ -88,21 +83,13 @@ function processContent(content: string, currentRel: string): string {
   );
 }
 
-export async function fetchDocContent(sectionId: string, itemId?: string): Promise<string> {
-  const filePath = getDocFilePath(sectionId, itemId);
-  if (!filePath) return MSG.notFound;
-  const key = `${sectionId}-${itemId ?? "default"}`;
-  if (DOC_CACHE[key]) return DOC_CACHE[key];
-  try {
-    const res = await fetch(filePath);
-    if (!res.ok) throw new Error(String(res.status));
-    const raw = await res.text();
-    const rel = getRelative(sectionId, itemId) ?? "";
-    const processed = processContent(raw, rel);
-    DOC_CACHE[key] = processed;
-    return processed;
-  } catch (e) {
-    console.error("Failed to load doc", e);
-    return MSG.loadFailed;
-  }
+const PROCESSED_CACHE: Record<string, string> = {};
+
+export function getDocContent(sectionId: string, itemId?: string): string {
+  const rel = getRelative(sectionId, itemId);
+  if (!rel) return MSG.notFound;
+  if (PROCESSED_CACHE[rel]) return PROCESSED_CACHE[rel];
+  const raw = RAW_DOCS[`./zh/${rel}`];
+  if (raw == null) return MSG.notFound;
+  return (PROCESSED_CACHE[rel] = processContent(raw, rel));
 }

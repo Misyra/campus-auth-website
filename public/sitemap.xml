@@ -6,8 +6,8 @@
   <url><loc>https://campus-auth.misyra.dev/changelog</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=introduction</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=install</loc></url>
-  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=console</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=quickstart</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=getting-started&item=console</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=overview</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=match</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=profiles&item=redirect</loc></url>
@@ -15,10 +15,16 @@
   <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=browser</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=variables</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=scripts</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=tasks&item=debug</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=monitor</loc></url>
-  <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=debug</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=automation&item=scheduled</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=cli</loc></url>
   <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=update</loc></url>
-  <url><loc>https://campus-auth.misyra.dev/docs?section=system&item=faq</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=faq&item=troubleshoot</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=faq&item=browser</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=faq&item=startup</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=reference&item=browser</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=reference&item=monitor</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=reference&item=system</loc></url>
+  <url><loc>https://campus-auth.misyra.dev/docs?section=reference&item=files</loc></url>
 </urlset>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,9 @@ import type { DocSection } from "@/content/docs/navigation";
 export function DocsSidebar({ sections, activeSection, activeItem, onNavigate }: { sections: DocSection[]; activeSection: string; activeItem?: string; onNavigate: (sid: string, iid?: string) => void }) {
   const [expanded, setExpanded] = useState<string[]>([activeSection]);
   const toggle = (id: string) => setExpanded((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+  useEffect(() => {
+    setExpanded((p) => (p.includes(activeSection) ? p : [...p, activeSection]));
+  }, [activeSection]);
   return (
     <aside className="w-64 shrink-0 lg:w-72">
       <nav className="sticky top-24 space-y-1">

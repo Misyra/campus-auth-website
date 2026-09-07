@@ -16,9 +16,9 @@ export function FeaturesSection() {
     <section id="features" className="section-y bg-background">
       <div className="container max-w-[1220px]">
         <SectionHeader
-          eyebrow="FEATURES"
+          eyebrow="WHY CAMPUS-AUTH"
           title={<>为校园网而生的<br />自动化套件</>}
-          subtitle="从检测到登录到打卡，覆盖宿舍、教学楼与软路由的全场景——本地优先，隐私与稳定兼得。"
+          subtitle="cc-switch 把 Codex 代理到免费 API，Campus-Auth 把你的登录页代理到本地后台——从检测到登录到打卡，覆盖宿舍、教学楼与软路由，换个网络也能无感接上。"
         />
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -35,6 +35,9 @@ export function FeaturesSection() {
             );
           })}
         </div>
+        <p className="mx-auto mt-8 max-w-2xl text-center text-xs leading-relaxed text-muted-foreground">
+          参考 MAA「一键长草」与 cc-switch「三步上手」的叙事：把零碎的手动操作收敛为一个常驻的本地小助手——开箱即用，不打扰日常。
+        </p>
       </div>
     </section>
   );

@@ -13,7 +13,15 @@ import { TableOfContents } from "@/components/docs/TableOfContents";
 
 type Flat = { sid: string; iid: string; title: string };
 
+// 兼容旧书签
 function resolveIds(section: string | null, item: string | null): { sid: string; iid: string } {
+  if (section === "automation" && item === "debug") {
+    section = "tasks";
+  }
+  if (section === "system" && item === "faq") {
+    section = "faq";
+    item = "troubleshoot";
+  }
   const sid = DOC_SECTIONS.find((s) => s.id === section)?.id ?? DOC_SECTIONS[0].id;
   const group = DOC_SECTIONS.find((s) => s.id === sid)!;
   const iid = group.items.find((x) => x.id === item)?.id ?? group.items[0].id;

@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "0d00.me/*", "zone_name": "0d00.me" },
+    { "pattern": "www.0d00.me/*", "zone_name": "0d00.me" }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

@@ -18,18 +18,30 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
     browser: "3-tasks/3.2-browser.md",
     variables: "3-tasks/3.3-variables.md",
     scripts: "3-tasks/3.4-scripts.md",
+    debug: "3-tasks/3.5-debug.md",
   },
   automation: {
     default: "4-automation/4.1-monitor.md",
     monitor: "4-automation/4.1-monitor.md",
-    debug: "4-automation/4.2-debug.md",
     scheduled: "4-automation/4.3-scheduled.md",
   },
   system: {
     default: "5-system/5.1-cli.md",
     cli: "5-system/5.1-cli.md",
     update: "5-system/5.2-update.md",
-    faq: "5-system/5.3-faq.md",
+  },
+  faq: {
+    default: "7-faq/7.1-troubleshoot.md",
+    troubleshoot: "7-faq/7.1-troubleshoot.md",
+    browser: "7-faq/7.2-browser.md",
+    startup: "7-faq/7.3-startup.md",
+  },
+  reference: {
+    default: "6-reference/6.1-browser.md",
+    browser: "6-reference/6.1-browser.md",
+    monitor: "6-reference/6.2-monitor.md",
+    system: "6-reference/6.3-system.md",
+    files: "6-reference/6.4-files.md",
   },
 };
 

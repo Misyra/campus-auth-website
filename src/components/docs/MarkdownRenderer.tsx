@@ -94,7 +94,7 @@ function CodeBlock({ className, children }: { className?: string; children: stri
 
 export function MarkdownRenderer({ content, className }: { content: string; className?: string }) {
   return (
-    <div className={cn("prose-docs max-w-full [overflow-wrap:anywhere]", className)}>
+    <div className={cn("prose-docs max-w-full [overflow-wrap:break-word]", className)}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -118,7 +118,7 @@ export function MarkdownRenderer({ content, className }: { content: string; clas
             const id = slugify(String(children));
             return <h4 id={id} className="mb-2 mt-6 scroll-mt-24 text-lg font-semibold">{children}</h4>;
           },
-          p: ({ children }) => <p className="mb-4 leading-7 text-muted-foreground">{children}</p>,
+          p: ({ children }) => <p className="mb-4 leading-7 text-muted-foreground [overflow-wrap:break-word]">{children}</p>,
           a: ({ href, children }) => (
             <a href={href} className="text-primary underline underline-offset-4 hover:text-primary/80" target={href?.startsWith("http") ? "_blank" : undefined} rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}>
               {children}
@@ -127,22 +127,26 @@ export function MarkdownRenderer({ content, className }: { content: string; clas
           ul: ({ children }) => <ul className="mb-4 ml-5 list-disc space-y-2 text-muted-foreground sm:ml-6">{children}</ul>,
           ol: ({ children }) => <ol className="mb-4 ml-5 list-decimal space-y-2 text-muted-foreground sm:ml-6">{children}</ol>,
           li: ({ children }) => <li className="leading-7">{children}</li>,
-          blockquote: ({ children }) => <blockquote className="my-4 rounded-r-lg border-l-4 py-2 pl-4 text-muted-foreground">{children}</blockquote>,
+          blockquote: ({ children }) => <blockquote className="my-4 rounded-r-lg border-l-4 border-primary/25 bg-muted/30 py-3 pl-4 pr-3 text-sm leading-7 text-muted-foreground">{children}</blockquote>,
           code: ({ className, children, ...props }) => {
             const block = className?.includes("language-");
             const str = String(children).replace(/\n$/, "");
             if (block) return <CodeBlock className={className}>{str}</CodeBlock>;
-            return <code className="whitespace-normal break-words rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-primary [overflow-wrap:anywhere]" {...props}>{children}</code>;
+            return (
+              <code className="break-words rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-primary [overflow-wrap:break-word] [word-break:break-word]" {...props}>
+                {children}
+              </code>
+            );
           },
           pre: ({ children }) => <>{children}</>,
           table: ({ children }) => (
-            <div className="mb-6 max-w-full overflow-hidden rounded-xl border">
-              <table className="w-full table-fixed border-collapse">{children}</table>
+            <div className="mb-6 max-w-full overflow-x-auto rounded-xl border">
+              <table className="w-full min-w-[520px] border-collapse">{children}</table>
             </div>
           ),
           thead: ({ children }) => <thead className="bg-muted/50">{children}</thead>,
-          th: ({ children }) => <th className="whitespace-normal break-words border-b px-3 py-3 text-left align-top text-sm font-semibold [overflow-wrap:anywhere] sm:px-4">{children}</th>,
-          td: ({ children }) => <td className="whitespace-normal break-words border-b px-3 py-3 align-top text-sm text-muted-foreground [overflow-wrap:anywhere] sm:px-4">{children}</td>,
+          th: ({ children }) => <th className="border-b px-3 py-3 text-left align-top text-sm font-semibold sm:px-4">{children}</th>,
+          td: ({ children }) => <td className="border-b px-3 py-3 align-top text-sm text-muted-foreground [overflow-wrap:break-word] sm:px-4">{children}</td>,
           hr: () => <hr className="my-8 border-border" />,
           img: ({ src, alt }) => <img src={src} alt={alt} className="my-6 max-w-full rounded-xl border shadow-lg" />,
         }}

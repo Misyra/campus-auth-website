@@ -31,7 +31,7 @@ if (!t.includes("文档")) throw new Error("docs title wrong");
 // 3. 返回首页后标题应恢复（此前会残留文档标题）
 t = await goto("/");
 console.log("back-to-home title:", t);
-if (!t.includes("断网自愈") || t.includes("文档")) throw new Error("stale title bug regressed");
+if (!t.includes("断网重连") || t.includes("文档")) throw new Error("stale title bug regressed");
 
 // 4. 其余路由
 console.log("download title:", await goto("/download"));

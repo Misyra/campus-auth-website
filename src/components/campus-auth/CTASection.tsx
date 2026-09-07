@@ -8,7 +8,10 @@ export function CTASection() {
       <div className="hero-gradient">
         <div className="container max-w-[1080px] py-12 md:py-14">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-            <h2 className="text-[22px] font-bold tracking-tight text-white md:text-[26px]">让校园网不再打断你</h2>
+            <div>
+              <h2 className="text-[22px] font-bold tracking-tight text-white md:text-[26px]">让校园网不再打断你</h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80">解压即用，断线自连，多校区自动切——把登录这件小事交给本地后台。</p>
+            </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <a href="#download">
                 <Button variant="secondary" className="h-11 w-full bg-white px-6 text-primary hover:bg-white/90 sm:w-auto">立即下载</Button>

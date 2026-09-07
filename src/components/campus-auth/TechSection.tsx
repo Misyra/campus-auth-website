@@ -4,7 +4,10 @@ export function TechSection() {
   return (
     <section className="section-y bg-background">
       <div className="container max-w-[1080px]">
-        <SectionHeader title="稳重、可移植、易排障" />
+        <SectionHeader
+          title="稳重、可移植、易排障"
+          subtitle="单二进制 + Python Worker 按需启动，账户本地加密、端口自动避让，出问题有日志与一键取证。"
+        />
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="overflow-hidden rounded-2xl border bg-card shadow-xl">
@@ -21,10 +24,10 @@ export function TechSection() {
 resources/              # 图标与脚本
 python_worker/          # 浏览器与 OCR
 
-./campus-auth            # 仅本机可访问
-./campus-auth --mode once`}
+./campus-auth             # 默认仅监听 127.0.0.1:50721
+./campus-auth --mode login-once   # 单次登录后退出`}
             </pre>
-            <p className="border-t border-white/10 px-4 py-3 text-xs leading-relaxed text-slate-300">Windows / macOS / Linux · Docker · 端口冲突自动重试。</p>
+            <p className="border-t border-white/10 px-4 py-3 text-xs leading-relaxed text-slate-300">Windows / macOS / Linux · Docker · 端口冲突自动重试，日志落盘可回溯。</p>
           </div>
         </div>
       </div>

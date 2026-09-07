@@ -2,7 +2,10 @@ import { useState } from "react";
 import { SITE } from "@/data/site";
 import { cn } from "@/lib/utils";
 
-export const QQ_GROUP_URL = `mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${SITE.qqGroup}&card_type=group&source=qrcode`;
+// 官方群分享短链：浏览器打开后由官方页唤起 QQ 加群，桌面 NT QQ / 手机 QQ 均支持。
+// 旧版 mqqapi://card/show_pslcard 深链在新版桌面 QQ 会弹"暂不支持该内容"。
+// 密钥失效换群时需在 QQ 群设置 → 分享群 重新生成。
+export const QQ_GROUP_URL = "https://qm.qq.com/q/rzhUZqRvzM";
 
 function useCopyQq() {
   const [copied, setCopied] = useState(false);

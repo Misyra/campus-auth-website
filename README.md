@@ -56,3 +56,7 @@ pnpm build
 
 - 仓库：https://github.com/Misyra/Campus-Auth-rs
 - 版本：5.0.0-alpha.8
+
+## 协议
+
+本站点代码以 [AGPL-3.0](LICENSE) 授权。

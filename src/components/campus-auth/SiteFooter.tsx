@@ -11,7 +11,7 @@ export function SiteFooter() {
             <div className="flex items-center gap-2">
               <img src="/logo.png" alt="" width={28} height={28} className="h-7 w-7 rounded-md bg-white p-1" />
               <span className="font-bold">{SITE.name}</span>
-              <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">MIT</span>
+              <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">AGPL-3.0</span>
             </div>
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted-foreground">校园网自动认证 · 解压即用。</p>
           </div>
@@ -40,7 +40,7 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-6 text-sm text-muted-foreground">© {new Date().getFullYear()} Campus-Auth · MIT · Misyra</div>
+        <div className="mt-8 border-t pt-6 text-sm text-muted-foreground">© {new Date().getFullYear()} Campus-Auth · <a href="https://github.com/Misyra/campus-auth-website/blob/main/LICENSE" target="_blank" rel="noreferrer" className="underline hover:text-foreground">AGPL-3.0</a> · <a href="https://github.com/Misyra/campus-auth-website" target="_blank" rel="noreferrer" className="underline hover:text-foreground">网站源码</a> · Misyra</div>
       </div>
     </footer>
   );

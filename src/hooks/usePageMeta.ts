@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const CANONICAL_BASE = "https://campus-auth.misyra.dev";
+const CANONICAL_BASE = "https://amiya.cc";
 
 function setMeta(selector: string, attrs: Record<string, string>) {
   let el = document.head.querySelector<HTMLMetaElement>(selector);

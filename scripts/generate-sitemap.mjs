@@ -1,5 +1,5 @@
 import { writeFileSync, mkdirSync } from "fs";
-const base = "https://campus-auth.misyra.dev";
+const base = "https://amiya.cc";
 const routes = ["", "/download", "/docs", "/changelog"];
 const docsSections = [
   "getting-started/introduction",

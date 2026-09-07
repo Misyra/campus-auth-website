@@ -3,8 +3,8 @@
   "name": "campus-auth-website",
   "compatibility_date": "2026-09-01",
   "routes": [
-    { "pattern": "0d00.me/*", "zone_name": "0d00.me" },
-    { "pattern": "www.0d00.me/*", "zone_name": "0d00.me" }
+    { "pattern": "amiya.cc/*", "zone_name": "amiya.cc" },
+    { "pattern": "www.amiya.cc/*", "zone_name": "amiya.cc" }
   ],
   "assets": {
     "directory": "./dist",

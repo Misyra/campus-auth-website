@@ -5,8 +5,8 @@ export function TechSection() {
     <section className="section-y bg-background">
       <div className="container max-w-[1080px]">
         <SectionHeader
-          title="稳重、可移植、易排障"
-          subtitle="单二进制 + Python Worker 按需启动，账户本地加密、端口自动避让，出问题有日志与一键取证。"
+          title="结构简洁，便于排查"
+          subtitle="单二进制文件，Python Worker 按需启动。账号本地加密存储，端口冲突时自动更换，日志落盘可供回溯。"
         />
 
         <div className="grid gap-6 lg:grid-cols-2">

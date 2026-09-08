@@ -19,7 +19,7 @@ export function DemoSection() {
   return (
     <section className="section-y bg-muted/30">
       <div className="container max-w-[1080px]">
-        <SectionHeader title="像本地应用一样直观" subtitle="网络检测、任务编排与定时调度，集中在同一个控制台——不用在多个窗口来回切。" />
+        <SectionHeader title="控制台界面" subtitle="网络检测、任务编排与定时调度集中于同一控制台，无需在多个窗口之间切换。" />
 
         <div className="mx-auto flex w-fit rounded-full border bg-card p-1 shadow-sm">
           {tabs.map((t) => {

@@ -9,8 +9,8 @@ export function CTASection() {
         <div className="container max-w-[1080px] py-12 md:py-14">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-[22px] font-bold tracking-tight text-white md:text-[26px]">让校园网不再打断你</h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80">解压即用，断线自连，多校区自动切——把登录这件小事交给本地后台。</p>
+              <h2 className="text-[22px] font-bold tracking-tight text-white md:text-[26px]">自动处理校园网登录</h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80">解压后即可运行：断线自动重连，多校区自动切换配置。登录过程由本地后台完成。</p>
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <a href="#download">

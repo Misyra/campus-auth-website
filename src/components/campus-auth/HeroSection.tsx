@@ -20,7 +20,7 @@ export function HeroSection() {
           <div className="mx-auto max-w-[600px] text-center lg:mx-0 lg:max-w-none lg:text-left">
             <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium dark:bg-primary/15">
-                <span aria-hidden>🎉</span> {tag} · 跨平台 · 开源免费 · 单文件解压即用
+                <span aria-hidden>🎉</span> {tag} · 开源免费 · 单文件发行
               </div>
 
               <div className="mt-6 flex items-center justify-center gap-3 lg:justify-start">
@@ -29,10 +29,10 @@ export function HeroSection() {
               </div>
 
               <p className="mx-auto mt-5 max-w-[520px] text-[18px] font-semibold leading-relaxed md:text-[24px] lg:mx-0">
-                校园网小助手，<span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">断网重连</span>、跨网无感切换，全天候一键在线
+                校园网自动登录工具，<span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">断网重连</span>、多网络自动切换
               </p>
               <p className="mx-auto mt-4 max-w-[540px] text-sm leading-relaxed text-muted-foreground md:text-[16px] lg:mx-0">
-                Campus-Auth 让你无需再盯着登录页——断线自动重连，换网自动匹配，验证码自动识别 —— 解压即用，无需注册，隐私不离机，即刻上手。
+                断线自动重连，更换网络时自动匹配配置，验证码自动识别。单文件发行，解压即用，无需注册，账号数据仅保存在本地。
               </p>
               <ul className="mx-auto mt-5 flex max-w-[540px] flex-wrap justify-center gap-2 text-xs text-muted-foreground lg:mx-0 lg:justify-start">
                 <li className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1"><Check className="h-3.5 w-3.5 text-emerald-500" /> Rust 单二进制</li>
@@ -50,10 +50,10 @@ export function HeroSection() {
                   </Button>
                 </a>
                 <a href="#download" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
-                  <Terminal className="h-4 w-4" /> 一条命令试用 →
+                  <Terminal className="h-4 w-4" /> Docker 单命令启动 →
                 </a>
               </div>
-              <p className="text-xs text-muted-foreground">Windows / macOS / Linux · Docker 一键起 · 端口占用自动重试</p>
+              <p className="text-xs text-muted-foreground">支持 Windows / macOS / Linux，提供 Docker 镜像；服务端口被占用时自动更换。</p>
             </motion.div>
           </div>
 

@@ -17,8 +17,8 @@ export function FeaturesSection() {
       <div className="container max-w-[1220px]">
         <SectionHeader
           eyebrow="WHY CAMPUS-AUTH"
-          title={<>为校园网而生的<br />自动化套件</>}
-          subtitle="从断线检测、自动登录到定时打卡，一套流程全包——覆盖宿舍、教学楼与软路由，换个网络也能无感接上。全程在本地完成，账户不出机。"
+          title={<>面向校园网场景的<br />自动化工具</>}
+          subtitle="涵盖断线检测、自动登录与定时任务，适用于宿舍、教学楼及软路由环境。全部流程在本地执行，账号数据不出本机。"
         />
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">

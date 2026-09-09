@@ -1,9 +1,29 @@
+import { useEffect } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SectionHeader } from "./SectionHeader";
 import { FAQS } from "@/data/site";
 import { Link } from "react-router-dom";
 
 export function FAQSection() {
+  // FAQPage 结构化数据：让搜索引擎在结果页直接展示问答片段
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    });
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <section className="section-y bg-background">
       <div className="container max-w-[820px]">

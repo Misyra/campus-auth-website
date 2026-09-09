@@ -1,8 +1,7 @@
-import { motion } from "framer-motion";
 import { ArrowRight, Check, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MacOsWindowBar } from "./MacOsWindowBar";
-import { ConsoleMock } from "./ConsoleMock";
+import { ConsoleMock } from "./console-mock";
 import { SmartDownload } from "./SmartDownload";
 import { useLatestRelease } from "@/hooks/useLatestRelease";
 import { SITE } from "@/data/site";
@@ -18,7 +17,7 @@ export function HeroSection() {
       <div className="container relative z-10 max-w-[1440px] py-12 md:py-16 lg:py-20">
         <div className="grid items-center gap-8 lg:grid-cols-[540px_1fr] lg:gap-10 xl:gap-14">
           <div className="mx-auto max-w-[600px] text-center lg:mx-0 lg:max-w-none lg:text-left">
-            <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <div className="animate-fade-in-up">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium dark:bg-primary/15">
                 <span aria-hidden>🎉</span> {tag} · 开源免费 · 单文件发行
               </div>
@@ -39,9 +38,9 @@ export function HeroSection() {
                 <li className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1"><Check className="h-3.5 w-3.5 text-emerald-500" /> 本地 Web 控制台</li>
                 <li className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1"><Check className="h-3.5 w-3.5 text-emerald-500" /> 离线可用</li>
               </ul>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.15 }} className="mt-7 space-y-3">
+            <div className="animate-fade-in-up mt-7 space-y-3" style={{ animationDelay: "0.15s", animationDuration: "0.55s" }}>
               <SmartDownload compact />
               <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 <a href={SITE.docsUrl}>
@@ -54,14 +53,12 @@ export function HeroSection() {
                 </a>
               </div>
               <p className="text-xs text-muted-foreground">支持 Windows / macOS / Linux，提供 Docker 镜像；服务端口被占用时自动更换。</p>
-            </motion.div>
+            </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 28 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="hidden justify-end lg:flex"
+          <div
+            className="animate-fade-in-left hidden justify-end lg:flex"
+            style={{ animationDelay: "0.25s" }}
           >
             <div className="relative w-full max-w-[860px] xl:max-w-[920px]">
               <div className="absolute -inset-6 -z-10 rounded-[28px] bg-gradient-to-br from-primary/20 to-info/20 blur-2xl" />
@@ -70,7 +67,7 @@ export function HeroSection() {
                 <ConsoleMock />
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         <div className="mx-auto mt-8 max-w-[640px] overflow-hidden rounded-[18px] border bg-card shadow-xl lg:hidden">

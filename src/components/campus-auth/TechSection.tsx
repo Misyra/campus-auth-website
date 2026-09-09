@@ -11,7 +11,10 @@ export function TechSection() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="overflow-hidden rounded-2xl border bg-card shadow-xl">
-            <img src="/screenshots/browser.webp" alt="" width={1280} height={800} className="w-full object-contain" loading="lazy" decoding="async" />
+            <picture>
+              <source srcSet="/screenshots/browser.avif" type="image/avif" />
+              <img src="/screenshots/browser.webp" alt="" width={1280} height={800} className="w-full object-contain" loading="lazy" decoding="async" />
+            </picture>
           </div>
 
           <div className="overflow-hidden rounded-2xl border bg-[#0f172a] text-slate-100 shadow-xl">

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { DOC_SECTIONS } from "@/content/docs/navigation";
-import { getDocContent } from "@/content/docs";
+import { getDocContent, LEGACY_REDIRECTS } from "@/content/docs";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { DocsSidebar } from "@/components/docs/DocsSidebar";
 import { DocsMobileNav } from "@/components/docs/DocsMobileNav";
@@ -14,15 +13,10 @@ import { QqGroupCard } from "@/components/campus-auth/QqGroup";
 
 type Flat = { sid: string; iid: string; title: string };
 
-// 兼容旧书签（?section=/&item= 时代的非法/改名组合回落）
+// 兼容旧书签：结构重组时代的非法/改名组合一律按 LEGACY_REDIRECTS 重定向到新路由
 function resolveIds(section: string | undefined, item: string | undefined): { sid: string; iid: string } {
-  if (section === "automation" && item === "debug") {
-    section = "tasks";
-  }
-  if (section === "system" && item === "faq") {
-    section = "faq";
-    item = "troubleshoot";
-  }
+  const legacy = section && item ? LEGACY_REDIRECTS[`${section}/${item}`] : undefined;
+  if (legacy) return legacy;
   const sid = DOC_SECTIONS.find((s) => s.id === section)?.id ?? DOC_SECTIONS[0].id;
   const group = DOC_SECTIONS.find((s) => s.id === sid)!;
   const iid = group.items.find((x) => x.id === item)?.id ?? group.items[0].id;
@@ -118,7 +112,7 @@ export default function DocsPage() {
             </div>
 
             <div className="min-w-0 flex-1">
-              <motion.article key={`${sid}-${iid}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="max-w-none xl:max-w-3xl">
+              <article key={`${sid}-${iid}`} className="animate-fade-in-up max-w-none xl:max-w-3xl" style={{ animationDuration: "0.25s" }}>
                 <div className="pb-8">
                   <MarkdownRenderer content={content} />
                 </div>
@@ -148,7 +142,7 @@ export default function DocsPage() {
                     )}
                   </div>
                 </div>
-              </motion.article>
+              </article>
             </div>
 
             <div className="hidden w-56 shrink-0 xl:block">

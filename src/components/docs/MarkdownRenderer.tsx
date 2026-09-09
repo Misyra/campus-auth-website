@@ -1,164 +1,122 @@
-import { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Link } from "react-router-dom";
-import { Check, Copy } from "lucide-react";
-import { cn, nodeText, slugify } from "@/lib/utils";
+import { useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
 
-type PrismModule = typeof import("prismjs");
-
-const normalize = (l: string) => {
-  const v = l.toLowerCase();
-  if (v === "js") return "javascript";
-  if (v === "ts") return "typescript";
-  if (["shell", "sh", "zsh", "terminal"].includes(v)) return "bash";
-  if (v === "py") return "python";
-  return v;
+// 代码块语言标签的显示归一化（与构建期 markdown-plugin 的 LANG_ALIAS 保持一致）
+const LANG_ALIAS: Record<string, string> = {
+  js: "javascript",
+  ts: "typescript",
+  shell: "bash",
+  sh: "bash",
+  zsh: "bash",
+  terminal: "bash",
+  py: "python",
+  yml: "yaml",
 };
 
-let prismPromise: Promise<PrismModule> | null = null;
-const prismLang = new Map<string, Promise<unknown>>();
-const loadCore = () => (prismPromise ??= import("prismjs"));
-const loaders: Record<string, () => Promise<unknown>> = {
-  javascript: () => import("prismjs/components/prism-javascript"),
-  typescript: async () => {
-    await loadLang("javascript");
-    return import("prismjs/components/prism-typescript");
-  },
-  jsx: async () => {
-    await loadLang("javascript");
-    return import("prismjs/components/prism-jsx");
-  },
-  tsx: async () => {
-    await loadLang("jsx");
-    await loadLang("typescript");
-    return import("prismjs/components/prism-tsx");
-  },
-  bash: () => import("prismjs/components/prism-bash"),
-  json: () => import("prismjs/components/prism-json"),
-  css: () => import("prismjs/components/prism-css"),
-  sql: () => import("prismjs/components/prism-sql"),
-  python: () => import("prismjs/components/prism-python"),
-  yaml: () => import("prismjs/components/prism-yaml"),
-  toml: () => import("prismjs/components/prism-toml"),
-};
-async function loadLang(lang: string) {
-  await loadCore();
-  const n = normalize(lang);
-  const loader = loaders[n];
-  if (!loader) return;
-  if (!prismLang.has(n)) prismLang.set(n, loader());
-  await prismLang.get(n);
-}
-
-function CodeBlock({ className, children }: { className?: string; children: string }) {
-  const [copied, setCopied] = useState(false);
-  const ref = useRef<HTMLElement>(null);
-  const lang = className?.replace("language-", "") ?? "text";
-  useEffect(() => {
-    let alive = true;
-    const el = ref.current;
-    if (!el) return;
-    Promise.all([loadCore(), loadLang(lang)])
-      .then(([Prism]) => {
-        if (alive) (Prism as unknown as { highlightElement: (e: HTMLElement) => void }).highlightElement(el);
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, [children, lang]);
-  return (
-    <div className="group relative max-w-full">
-      <div className="absolute right-2 top-2 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-        <button
-          onClick={async () => {
-            await navigator.clipboard.writeText(children);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1800);
-          }}
-          className="rounded-lg border border-border/50 bg-muted/80 p-2 hover:bg-muted"
-          aria-label="复制代码"
-        >
-          {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
-        </button>
-      </div>
-      <div className="absolute left-3 top-2 text-[11px] uppercase tracking-wider text-muted-foreground/60">{lang}</div>
-      <pre className="max-w-full overflow-x-auto rounded-xl border bg-card px-4 pb-4 pt-9 text-sm">
-        <code ref={ref} className={`language-${normalize(lang)}`}>
-          {children}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
-/** 标题 id 统一走 nodeText：标题含 `code` / **加粗** 时 String(children) 会退化成
- *  "[object Object]"，与 TableOfContents 从 markdown 原文解析出的 id 对不上 */
-function headingId(children: React.ReactNode): string {
-  return slugify(nodeText(children));
-}
-
+/**
+ * MarkdownRenderer — 展示构建时预渲染的 HTML（见 scripts/markdown-plugin.mjs）。
+ * 运行时只做轻量交互：代码复制按钮、外链新窗口、图片懒加载。
+ */
 export function MarkdownRenderer({ content, className }: { content: string; className?: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // 给每个代码块加语言标签 + 复制按钮（外层 wrap 由运行时补齐，构建期 HTML 只有裸 <pre>）
+    const pres = container.querySelectorAll("pre");
+    const cleanups: Array<() => void> = [];
+
+    pres.forEach((pre) => {
+      if (pre.parentElement?.classList.contains("code-wrap")) return;
+      const code = pre.querySelector("code");
+      if (!code) return;
+      const text = code.textContent ?? "";
+      const raw = /language-([\w+-]+)/.exec(code.className)?.[1]?.toLowerCase() ?? "text";
+      const lang = LANG_ALIAS[raw] ?? raw;
+
+      const wrap = document.createElement("div");
+      wrap.className = "code-wrap group relative max-w-full";
+
+      const label = document.createElement("div");
+      label.className =
+        "pointer-events-none absolute left-3 top-2 z-10 select-none text-[11px] uppercase tracking-wider text-muted-foreground/60";
+      label.textContent = lang;
+
+      const btn = document.createElement("button");
+      btn.className =
+        "absolute right-2 top-2 z-10 rounded-lg border border-border/50 bg-muted/80 p-2 opacity-0 transition-opacity hover:bg-muted group-hover:opacity-100";
+      btn.setAttribute("aria-label", "复制代码");
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+
+      const onClick = async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600"><polyline points="20 6 9 17 4 12"/></svg>`;
+          setTimeout(() => {
+            btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+          }, 1800);
+        } catch {
+          // 剪贴板写入失败时静默忽略
+        }
+      };
+      btn.addEventListener("click", onClick);
+
+      // 把 pre 移到 wrap 里
+      const prevParent = pre.parentNode;
+      pre.parentNode?.insertBefore(wrap, pre);
+      wrap.append(pre, label, btn);
+
+      // cleanup 时还原 DOM：StrictMode 卸载重挂会重跑本 effect，
+      // 不还原的话会叠两层 wrap、旧按钮监听丢失（复制失效）
+      cleanups.push(() => {
+        btn.removeEventListener("click", onClick);
+        prevParent?.insertBefore(pre, wrap);
+        wrap.remove();
+      });
+    });
+
+    // 表格补横向滚动容器（构建期 HTML 只有裸 <table>，宽表在窄屏会撑破布局）
+    const tables = container.querySelectorAll("table");
+    tables.forEach((table) => {
+      if (table.parentElement?.classList.contains("table-wrap")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap mb-6 max-w-full overflow-x-auto rounded-xl border";
+      const prevParent = table.parentNode;
+      table.parentNode?.insertBefore(wrap, table);
+      wrap.appendChild(table);
+      cleanups.push(() => {
+        prevParent?.insertBefore(table, wrap);
+        wrap.remove();
+      });
+    });
+
+    // 外链新窗口打开
+    const links = container.querySelectorAll('a[href^="http"]');
+    links.forEach((a) => {
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener noreferrer");
+    });
+
+    // 图片懒加载
+    const imgs = container.querySelectorAll("img");
+    imgs.forEach((img) => {
+      img.setAttribute("loading", "lazy");
+      img.setAttribute("decoding", "async");
+      img.classList.add("my-6", "max-w-full", "rounded-xl", "border", "shadow-lg");
+    });
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  }, [content]);
+
   return (
-    <div className={cn("prose-docs max-w-full [overflow-wrap:break-word]", className)}>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          h1: ({ children }) => (
-            <h1 id={headingId(children)} className="mb-6 mt-8 scroll-mt-24 border-b border-border pb-4 text-3xl font-bold first:mt-0 md:text-4xl">
-              {children}
-            </h1>
-          ),
-          h2: ({ children }) => <h2 id={headingId(children)} className="mb-4 mt-10 scroll-mt-24 text-2xl font-semibold md:text-3xl">{children}</h2>,
-          h3: ({ children }) => <h3 id={headingId(children)} className="mb-3 mt-8 scroll-mt-24 text-xl font-semibold md:text-2xl">{children}</h3>,
-          h4: ({ children }) => <h4 id={headingId(children)} className="mb-2 mt-6 scroll-mt-24 text-lg font-semibold">{children}</h4>,
-          p: ({ children }) => <p className="mb-4 leading-7 text-muted-foreground [overflow-wrap:break-word]">{children}</p>,
-          a: ({ href, children }) => {
-            const cls = "text-primary underline underline-offset-4 hover:text-primary/80";
-            // 文档内链被改写成 ?section=&item=，走路由而非原生 <a>，避免整页刷新
-            if (href?.startsWith("?")) {
-              return (
-                <Link to={href} className={cls}>
-                  {children}
-                </Link>
-              );
-            }
-            return (
-              <a href={href} className={cls} target={href?.startsWith("http") ? "_blank" : undefined} rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}>
-                {children}
-              </a>
-            );
-          },
-          ul: ({ children }) => <ul className="mb-4 ml-5 list-disc space-y-2 text-muted-foreground sm:ml-6">{children}</ul>,
-          ol: ({ children }) => <ol className="mb-4 ml-5 list-decimal space-y-2 text-muted-foreground sm:ml-6">{children}</ol>,
-          li: ({ children }) => <li className="leading-7">{children}</li>,
-          blockquote: ({ children }) => <blockquote className="my-4 rounded-r-lg border-l-4 border-primary/25 bg-muted/30 py-3 pl-4 pr-3 text-sm leading-7 text-muted-foreground">{children}</blockquote>,
-          code: ({ className, children, ...props }) => {
-            const block = className?.includes("language-");
-            const str = String(children).replace(/\n$/, "");
-            if (block) return <CodeBlock className={className}>{str}</CodeBlock>;
-            return (
-              <code className="break-words rounded bg-muted px-1.5 py-0.5 font-mono text-[13px] text-primary [overflow-wrap:break-word] [word-break:break-word]" {...props}>
-                {children}
-              </code>
-            );
-          },
-          pre: ({ children }) => <>{children}</>,
-          table: ({ children }) => (
-            <div className="mb-6 max-w-full overflow-x-auto rounded-xl border">
-              <table className="w-full min-w-[520px] border-collapse">{children}</table>
-            </div>
-          ),
-          thead: ({ children }) => <thead className="bg-muted/50">{children}</thead>,
-          th: ({ children }) => <th className="border-b px-3 py-3 text-left align-top text-sm font-semibold sm:px-4">{children}</th>,
-          td: ({ children }) => <td className="border-b px-3 py-3 align-top text-sm text-muted-foreground [overflow-wrap:break-word] sm:px-4">{children}</td>,
-          hr: () => <hr className="my-8 border-border" />,
-          img: ({ src, alt }) => <img src={src} alt={alt} loading="lazy" decoding="async" className="my-6 max-w-full rounded-xl border shadow-lg" />,
-        }}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
+    <div
+      ref={containerRef}
+      className={cn("prose-docs max-w-full [overflow-wrap:break-word]", className)}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
   );
 }

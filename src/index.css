@@ -189,14 +189,75 @@
     transform: translateY(1px);
   }
 
-  /* 文档排版 — 轻量 prose，不引 @tailwindcss/typography */
-  .prose-docs :where(h1 + *, h2 + *, h3 + *) { margin-top: 0; }
-  .prose-docs a { @apply underline underline-offset-4 decoration-primary/30 hover:decoration-primary; }
-  .prose-docs pre { @apply border; }
+  /* 入场动画 — 替代 framer-motion 的简单淡入上移，零运行时开销 */
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fade-in-down {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in-left {
+    from { opacity: 0; transform: translateX(28px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .animate-fade-in-left {
+    animation: fade-in-left 0.7s ease-out both;
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.5s ease-out both;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out both;
+  }
+  .animate-fade-in-down {
+    animation: fade-in-down 0.15s ease-out both;
+  }
+
+  /* 文档排版 — 轻量 prose，不引 @tailwindcss/typography。
+     注意：Tailwind preflight 会清掉标题字号、段落边距、列表符、表格边框等
+     浏览器默认样式，这里必须提供完整基础排版，否则文档页整页退化为纯文本。
+     各元素规格与旧版 react-markdown 逐元素 className 保持一致。 */
+  .prose-docs h1 { @apply mb-6 mt-8 scroll-mt-24 border-b border-border pb-4 text-3xl font-bold md:text-4xl; }
+  .prose-docs > h1:first-child { margin-top: 0; }
+  .prose-docs h2 { @apply mb-4 mt-10 scroll-mt-24 text-2xl font-semibold md:text-3xl; }
+  .prose-docs h3 { @apply mb-3 mt-8 scroll-mt-24 text-xl font-semibold md:text-2xl; }
+  .prose-docs h4 { @apply mb-2 mt-6 scroll-mt-24 text-lg font-semibold; }
+  .prose-docs h5, .prose-docs h6 { @apply mb-2 mt-6 scroll-mt-24 text-base font-semibold; }
+  .prose-docs p { @apply mb-4 leading-7 text-muted-foreground; }
+  .prose-docs ul { @apply mb-4 ml-5 list-disc space-y-2 text-muted-foreground sm:ml-6; }
+  .prose-docs ol { @apply mb-4 ml-5 list-decimal space-y-2 text-muted-foreground sm:ml-6; }
+  .prose-docs li { @apply leading-7; }
+  .prose-docs a { @apply text-primary underline underline-offset-4 hover:text-primary/80; }
+  .prose-docs pre { @apply mb-6 max-w-full overflow-x-auto rounded-xl border bg-card px-4 pb-4 pt-9 text-sm; }
   .prose-docs :not(pre) > code { @apply rounded bg-muted px-1.5 py-0.5 font-mono text-[0.9em] text-primary; }
-  .prose-docs blockquote { @apply border-l-4 border-primary/25 bg-muted/40; }
-  .prose-docs table { @apply w-full text-sm; }
-  .prose-docs th { @apply bg-muted/50 font-semibold; }
+  .prose-docs blockquote { @apply my-4 rounded-r-lg border-l-4 border-primary/25 bg-muted/30 py-3 pl-4 pr-3 text-sm leading-7 text-muted-foreground; }
+  .prose-docs table { @apply w-full min-w-[520px] border-collapse text-sm; }
+  .prose-docs th { @apply border-b bg-muted/50 px-3 py-3 text-left align-top font-semibold sm:px-4; }
+  .prose-docs td { @apply border-b px-3 py-3 align-top text-muted-foreground sm:px-4; }
+  .prose-docs hr { @apply my-8 border-border; }
+
+  /* 提示块（> [!NOTE] / [!TIP] / [!IMPORTANT] / [!WARNING]，构建期由 markdown-plugin 展开） */
+  .prose-docs .doc-callout { @apply my-6 rounded-lg border border-l-4 px-4 py-3 text-sm; }
+  .prose-docs .doc-callout__label { @apply my-0 text-xs font-semibold uppercase tracking-wider; }
+  .prose-docs .doc-callout p { @apply my-2 leading-7; }
+  .prose-docs .doc-callout > *:first-of-type + p { @apply mt-1; }
+  .prose-docs .doc-callout > *:last-child { @apply mb-0; }
+  .prose-docs .doc-callout ul { @apply mb-2 ml-5 sm:ml-6; }
+  .prose-docs .doc-callout ol { @apply mb-2 ml-5 sm:ml-6; }
+  .prose-docs .doc-callout--note { @apply border-sky-500/30 border-l-sky-500 bg-sky-500/[0.06]; }
+  .prose-docs .doc-callout--note .doc-callout__label { @apply text-sky-600 dark:text-sky-400; }
+  .prose-docs .doc-callout--tip { @apply border-emerald-500/30 border-l-emerald-500 bg-emerald-500/[0.06]; }
+  .prose-docs .doc-callout--tip .doc-callout__label { @apply text-emerald-600 dark:text-emerald-400; }
+  .prose-docs .doc-callout--important { @apply border-violet-500/30 border-l-violet-500 bg-violet-500/[0.06]; }
+  .prose-docs .doc-callout--important .doc-callout__label { @apply text-violet-600 dark:text-violet-400; }
+  .prose-docs .doc-callout--warning { @apply border-amber-500/30 border-l-amber-500 bg-amber-500/[0.07]; }
+  .prose-docs .doc-callout--warning .doc-callout__label { @apply text-amber-600 dark:text-amber-400; }
 }
 
 /* Prism — 跟随站内 token，不另起主题包 */

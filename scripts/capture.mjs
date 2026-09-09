@@ -8,15 +8,10 @@ const outDir = join(__dirname, "../public/screenshots");
 mkdirSync(outDir, { recursive: true });
 
 const base = "http://127.0.0.1:50721";
+// 仅抓取官网实际引用的 4 张截图；新增界面前先在 DemoSection/TechSection 用上
 const shots = [
-  { path: "/", file: "dashboard.webp", wait: "networkidle", full: true },
-  { path: "/profiles", file: "profiles.webp", wait: "networkidle", full: true },
   { path: "/tasks", file: "tasks.webp", wait: "networkidle", full: true },
-  { path: "/ai-task", file: "ai-task.webp", wait: "networkidle", full: true },
   { path: "/scheduled", file: "scheduled.webp", wait: "networkidle", full: true },
-  { path: "/scripts", file: "scripts.webp", wait: "networkidle", full: true },
-  { path: "/appearance", file: "appearance.webp", wait: "networkidle", full: true },
-  { path: "/settings", file: "settings.webp", wait: "networkidle", full: true },
   { path: "/settings/monitor", file: "monitor.webp", wait: "networkidle", full: true },
   { path: "/settings/browser", file: "browser.webp", wait: "networkidle", full: true },
 ];

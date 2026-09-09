@@ -78,17 +78,9 @@ export function SiteNavbar() {
                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-card hover:bg-accent"
                 aria-label="切换主题"
               >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={theme}
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
-                    transition={{ duration: 0.15 }}
-                  >
-                    {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                  </motion.span>
-                </AnimatePresence>
+                <span key={theme} className="animate-fade-in-down inline-flex">
+                  {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </span>
               </button>
             )}
             <a

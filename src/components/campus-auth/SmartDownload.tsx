@@ -1,36 +1,25 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, Monitor, Apple, Boxes, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { detectPlatform, type DetectedPlatform, latestDownloadUrl, PLATFORM_LABEL, PLATFORM_TO_TARGET, assetNameForTarget } from "@/lib/platform";
-import { useLatestRelease } from "@/hooks/useLatestRelease";
+import { useDownloadInfo, type PlatformDownload } from "@/hooks/useDownloadInfo";
 import { SITE } from "@/data/site";
 
-const iconFor = (p: DetectedPlatform) => {
+const iconFor = (p: PlatformDownload["platform"]) => {
   if (p.startsWith("windows")) return Monitor;
   if (p.startsWith("macos")) return Apple;
   if (p.startsWith("linux")) return Boxes;
   return Download;
 };
 
-const ALL_PLATFORMS: Exclude<DetectedPlatform, "unknown">[] = ["windows-x64", "windows-arm64", "macos-arm64", "macos-x64", "linux-x64"];
-
 export function SmartDownload({ compact = false }: { compact?: boolean }) {
   if (compact) return <SmartDownloadHero />;
   return <SmartDownloadFull />;
 }
 
+/** 首页 Hero 紧凑版：主推荐按钮 + 其他平台入口 */
 function SmartDownloadHero() {
-  const { tag } = useLatestRelease();
-  const [platform, setPlatform] = useState<DetectedPlatform>("unknown");
-  useEffect(() => setPlatform(detectPlatform()), []);
-  const primary = useMemo(() => {
-    if (platform === "unknown") return null;
-    const target = PLATFORM_TO_TARGET[platform];
-    const asset = assetNameForTarget(tag, target);
-    return { platform, label: PLATFORM_LABEL[platform], href: latestDownloadUrl(asset) };
-  }, [platform, tag]);
-  const PrimaryIcon = iconFor(primary?.platform ?? "unknown");
+  const { primary, tag } = useDownloadInfo();
 
   if (!primary) {
     return (
@@ -45,6 +34,7 @@ function SmartDownloadHero() {
     );
   }
 
+  const PrimaryIcon = iconFor(primary.platform);
   return (
     <div className="flex flex-wrap items-center gap-3">
       <a href={primary.href} rel="noreferrer" className="group relative rounded-xl p-[2px]">
@@ -62,33 +52,17 @@ function SmartDownloadHero() {
   );
 }
 
+/** 下载页完整版：主推荐 + 可展开的全平台列表 */
 function SmartDownloadFull() {
-  const { tag } = useLatestRelease();
-  const [platform, setPlatform] = useState<DetectedPlatform>("unknown");
+  const { primary, all, tag } = useDownloadInfo();
   const [expanded, setExpanded] = useState(false);
-  useEffect(() => setPlatform(detectPlatform()), []);
-
-  const primary = useMemo(() => {
-    if (platform === "unknown") return null;
-    const target = PLATFORM_TO_TARGET[platform];
-    const asset = assetNameForTarget(tag, target);
-    return { platform, label: PLATFORM_LABEL[platform], asset, href: latestDownloadUrl(asset) };
-  }, [platform, tag]);
-  const PrimaryIcon = iconFor(primary?.platform ?? "unknown");
 
   return (
     <div className="rounded-2xl border bg-card p-5 md:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           {primary ? (
-            <a href={primary.href} rel="noreferrer" className="group relative rounded-xl p-[2px]">
-              <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-400 via-fuchsia-500 to-cyan-400 opacity-90 transition group-hover:opacity-100" />
-              <span className="relative inline-flex items-center gap-2.5 whitespace-nowrap rounded-[10px] bg-card px-5 py-[9px] text-sm font-semibold">
-                <PrimaryIcon className="h-4 w-4 shrink-0" />
-                {primary.label} 下载
-                <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-normal text-muted-foreground">{tag}</span>
-              </span>
-            </a>
+            <PrimaryButton primary={primary} tag={tag} />
           ) : (
             <a href={`${SITE.releaseBase}/latest`} target="_blank" rel="noreferrer">
               <Button variant="hero" className="h-11 px-7">免费下载</Button>
@@ -110,30 +84,27 @@ function SmartDownloadFull() {
         {expanded && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }} className="overflow-hidden">
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {ALL_PLATFORMS.map((p) => {
-                const target = PLATFORM_TO_TARGET[p];
-                const asset = assetNameForTarget(tag, target);
-                const href = latestDownloadUrl(asset);
-                const isCurrent = p === platform;
-                const Icon = iconFor(p);
+              {all.map((p) => {
+                const isCurrent = primary?.platform === p.platform;
+                const Icon = iconFor(p.platform);
                 return (
-                  <div key={p} className="flex flex-col">
+                  <div key={p.platform} className="flex flex-col">
                     <a
-                      href={href}
+                      href={p.href}
                       rel="noreferrer"
-                      title={asset}
+                      title={p.asset}
                       className={`flex h-[112px] flex-col rounded-xl border bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${isCurrent ? "ring-1 ring-primary/25" : ""}`}
                     >
                       <span className="inline-flex items-center gap-2 whitespace-nowrap text-sm font-semibold">
                         <Icon className="h-4 w-4 shrink-0" />
-                        {PLATFORM_LABEL[p]} 下载
+                        {p.label} 下载
                       </span>
                       <span className="mt-1 font-mono text-xs text-muted-foreground">{tag}</span>
-                      <span className="mt-2 truncate font-mono text-[11px] leading-none text-muted-foreground" title={asset}>
-                        {asset}
+                      <span className="mt-2 truncate font-mono text-[11px] leading-none text-muted-foreground" title={p.asset}>
+                        {p.asset}
                       </span>
                     </a>
-                    {platform !== "unknown" && !isCurrent ? (
+                    {primary && !isCurrent ? (
                       <span className="mt-1.5 inline-flex items-center gap-1 text-xs text-red-500">
                         <AlertCircle className="h-3 w-3 shrink-0" /> 不支持您当前的系统架构
                       </span>
@@ -150,5 +121,19 @@ function SmartDownloadFull() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function PrimaryButton({ primary, tag }: { primary: PlatformDownload; tag: string }) {
+  const PrimaryIcon = iconFor(primary.platform);
+  return (
+    <a href={primary.href} rel="noreferrer" className="group relative rounded-xl p-[2px]">
+      <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-400 via-fuchsia-500 to-cyan-400 opacity-90 transition group-hover:opacity-100" />
+      <span className="relative inline-flex items-center gap-2.5 whitespace-nowrap rounded-[10px] bg-card px-5 py-[9px] text-sm font-semibold">
+        <PrimaryIcon className="h-4 w-4 shrink-0" />
+        {primary.label} 下载
+        <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs font-normal text-muted-foreground">{tag}</span>
+      </span>
+    </a>
   );
 }

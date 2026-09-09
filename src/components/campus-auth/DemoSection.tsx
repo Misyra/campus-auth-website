@@ -7,9 +7,9 @@ import { MacOsWindowBar } from "./MacOsWindowBar";
 type Tab = "monitor" | "tasks" | "schedule";
 
 const tabs: { key: Tab; label: string; icon: React.ComponentType<{ className?: string }>; shot: string }[] = [
-  { key: "monitor", label: "检测 · 配置", icon: Activity, shot: "/screenshots/monitor.webp" },
-  { key: "tasks", label: "任务 · 步骤", icon: Layers, shot: "/screenshots/tasks.webp" },
-  { key: "schedule", label: "定时 · 排班", icon: Clock3, shot: "/screenshots/scheduled.webp" },
+  { key: "monitor", label: "检测 · 配置", icon: Activity, shot: "monitor" },
+  { key: "tasks", label: "任务 · 步骤", icon: Layers, shot: "tasks" },
+  { key: "schedule", label: "定时 · 排班", icon: Clock3, shot: "scheduled" },
 ];
 
 export function DemoSection() {
@@ -39,7 +39,10 @@ export function DemoSection() {
 
         <div className="mx-auto mt-6 max-w-[920px] overflow-hidden rounded-2xl border bg-card shadow-2xl">
           <MacOsWindowBar className="h-11 border-b bg-muted/40 px-4" />
-          <img src={activeShot} alt="" width={1280} height={800} className="w-full object-contain" loading="lazy" decoding="async" />
+          <picture>
+            <source srcSet={`/screenshots/${activeShot}.avif`} type="image/avif" />
+            <img src={`/screenshots/${activeShot}.webp`} alt="" width={1280} height={800} className="w-full object-contain" loading="lazy" decoding="async" />
+          </picture>
         </div>
       </div>
     </section>

@@ -49,7 +49,7 @@ pnpm build
 
 - `src/components/campus-auth/` — Hero / Features / Demo / Tech / Scenarios / Screenshots / FAQ / Download / CTA
 - `src/data/site.ts` — 版本、仓库、下载资产等单一事实来源
-- `public/screenshots/` — Playwright 实拍（dashboard/profiles/tasks/ai-task/scheduled/scripts/appearance/settings/monitor/browser）
+- `public/screenshots/` — Playwright 实拍（tasks/scheduled/monitor/browser，与官网引用一一对应）
 - `scripts/capture.mjs` / `scripts/generate-sitemap.mjs`
 
 ## 站点信息

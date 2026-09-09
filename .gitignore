@@ -16,3 +16,6 @@ Thumbs.db
 
 # 本地 AI 会话记忆
 .workbuddy/
+
+# 本地视觉校验临时产物
+.dev-*

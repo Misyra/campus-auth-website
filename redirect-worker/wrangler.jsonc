@@ -1,0 +1,10 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "amiya-redirect",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-01",
+  "routes": [
+    { "pattern": "amiya.cc/*", "zone_name": "amiya.cc" },
+    { "pattern": "www.amiya.cc/*", "zone_name": "amiya.cc" }
+  ]
+}

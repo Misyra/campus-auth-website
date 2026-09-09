@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const CANONICAL_BASE = "https://amiya.cc";
+const CANONICAL_BASE = "https://campus-auth.misyra.com";
 
 /**
  * 每个路由的 title / description / canonical。

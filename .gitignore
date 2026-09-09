@@ -19,3 +19,6 @@ Thumbs.db
 
 # 本地视觉校验临时产物
 .dev-*
+
+# wrangler 本地状态
+.wrangler/

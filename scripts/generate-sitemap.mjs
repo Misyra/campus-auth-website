@@ -1,7 +1,7 @@
 import { writeFileSync } from "fs";
 import { getDocRoutes, fileLastmod } from "./lib/docs-routes.mjs";
 
-const base = "https://amiya.cc";
+const base = "https://campus-auth.misyra.com";
 const routes = ["", "/docs", "/download", "/changelog"];
 
 const urls = [

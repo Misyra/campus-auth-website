@@ -1,5 +1,3 @@
-# 预渲染文件已覆盖全部真实路由；未命中路径由 Cloudflare Pages 自动使用 404.html
-# 此处仅做尾斜杠规范化
-/download/  /download  301
-/changelog/  /changelog  301
-/docs/  /docs  301
+# 预渲染文件已覆盖全部真实路由；未命中路径由 Workers assets 的 not_found_handling 使用 404.html
+# 尾斜杠规范化已由 wrangler.jsonc 的 html_handling: "drop-trailing-slash" 原生处理，
+# 此处不要再写 /xxx/ 规则——会与 assets 层的 307 补斜杠互相打架形成重定向循环（2026-09-09 修复）。

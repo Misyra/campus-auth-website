@@ -10,15 +10,16 @@ export type PlatformDownload = {
   href: string;
 };
 
-const ALL_PLATFORMS: Exclude<DetectedPlatform, "unknown">[] = [
+const ALL_PLATFORMS: Exclude<DetectedPlatform, "unknown" | "mobile">[] = [
   "windows-x64",
   "windows-arm64",
   "macos-arm64",
   "macos-x64",
   "linux-x64",
+  "linux-arm64",
 ];
 
-function buildDownload(platform: Exclude<DetectedPlatform, "unknown">, tag: string): PlatformDownload {
+function buildDownload(platform: Exclude<DetectedPlatform, "unknown" | "mobile">, tag: string): PlatformDownload {
   const target = PLATFORM_TO_TARGET[platform];
   const asset = assetNameForTarget(tag, target);
   return { platform, label: PLATFORM_LABEL[platform], target, asset, href: latestDownloadUrl(asset) };
@@ -37,11 +38,11 @@ export function useDownloadInfo() {
   }, []);
 
   const primary = useMemo<PlatformDownload | null>(() => {
-    if (platform === "unknown") return null;
+    if (platform === "unknown" || platform === "mobile") return null;
     return buildDownload(platform, tag);
   }, [platform, tag]);
 
   const all = useMemo<PlatformDownload[]>(() => ALL_PLATFORMS.map((p) => buildDownload(p, tag)), [tag]);
 
-  return { tag, platform, primary, all };
+  return { tag, platform, primary, all, isMobile: platform === "mobile" };
 }

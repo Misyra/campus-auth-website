@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Monitor, Apple, Boxes, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Download, Monitor, Apple, Boxes, AlertCircle, Smartphone, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDownloadInfo, type PlatformDownload } from "@/hooks/useDownloadInfo";
 import { SITE } from "@/data/site";
@@ -19,7 +19,16 @@ export function SmartDownload({ compact = false }: { compact?: boolean }) {
 
 /** 首页 Hero 紧凑版：主推荐按钮 + 其他平台入口 */
 function SmartDownloadHero() {
-  const { primary, tag } = useDownloadInfo();
+  const { primary, tag, isMobile } = useDownloadInfo();
+
+  if (isMobile) {
+    return (
+      <span className="inline-flex items-center gap-2 rounded-xl border border-dashed bg-card px-5 py-3 text-sm font-medium text-muted-foreground">
+        <Smartphone className="h-4 w-4 shrink-0" />
+        暂不支持当前平台，请在电脑上访问下载
+      </span>
+    );
+  }
 
   if (!primary) {
     return (
@@ -54,8 +63,21 @@ function SmartDownloadHero() {
 
 /** 下载页完整版：主推荐 + 可展开的全平台列表 */
 function SmartDownloadFull() {
-  const { primary, all, tag } = useDownloadInfo();
+  const { primary, all, tag, isMobile } = useDownloadInfo();
   const [expanded, setExpanded] = useState(false);
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col items-center gap-2 rounded-2xl border bg-card p-8 text-center">
+        <Smartphone className="h-8 w-8 text-muted-foreground" />
+        <p className="text-sm font-semibold text-foreground">暂不支持当前平台</p>
+        <p className="text-xs text-muted-foreground">请使用电脑浏览器访问本页面，选择对应系统版本下载</p>
+        <a href={`${SITE.releaseBase}/latest`} target="_blank" rel="noreferrer" className="mt-2 text-sm font-medium text-primary hover:underline">
+          前往 GitHub Releases 查看完整清单
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border bg-card p-5 md:p-6">

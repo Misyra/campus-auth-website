@@ -6,8 +6,8 @@ import { SITE } from "@/data/site";
 export default function ChangelogPage() {
   const { tag } = useLatestRelease();
   usePageMeta({
-    title: "更新日志 — Campus-Auth",
-    description: "Campus-Auth 版本更新记录：新功能、修复与改进，完整发布见 GitHub Releases。",
+    title: "更新日志 — 认证喵",
+    description: "认证喵（Campus-Auth）版本更新记录：新功能、修复与改进，完整发布见 GitHub Releases。",
     path: "/changelog",
   });
   return (
@@ -22,10 +22,11 @@ export default function ChangelogPage() {
 
         <div className="mt-8 space-y-4">
           <div className="rounded-2xl border bg-card p-6">
-            <p className="text-sm font-semibold">{tag} · 2026-09-05</p>
+            <p className="text-sm font-semibold">v5.0.0-alpha.10 · 2026-09-17</p>
             <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-muted-foreground">
-              <li>AI 任务生成实测与执行结果修复</li>
-              <li>模型配置可收起、浏览器高级启动参数、手动执行误报修复</li>
+              <li>新增直连请求登录：简单门户无需 Python、Playwright 或浏览器</li>
+              <li>方案按网络绑定浏览器任务，新增默认 / 调试运行模式与暂停时段控制</li>
+              <li>更新文档、任务校验、OCR 环境与托盘入口，和当前实现保持一致</li>
             </ul>
           </div>
           <div className="rounded-2xl border bg-card p-6">
@@ -39,7 +40,7 @@ export default function ChangelogPage() {
             <p className="mt-2 text-sm text-muted-foreground">正式版基线，四端统一与全面检查修复。</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/docs/system/update" className="inline-flex h-10 items-center rounded-full border bg-card px-5 text-sm font-medium hover:bg-accent">
+            <Link to="/docs/maintenance/update" className="inline-flex h-10 items-center rounded-full border bg-card px-5 text-sm font-medium hover:bg-accent">
               查看站内文档
             </Link>
             <a href={`${SITE.repo}/releases`} target="_blank" rel="noreferrer" className="inline-flex h-10 items-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground">

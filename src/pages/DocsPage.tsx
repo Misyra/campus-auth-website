@@ -57,10 +57,10 @@ export default function DocsPage() {
   const content = useMemo(() => getDocContent(sid, iid), [sid, iid]);
 
   // 文档页每个 section/item 是独立 URL：canonical 必须自引用，否则 sitemap 里的
-  // 24 个文档 URL 会被判成重复页
+  // 26 个文档 URL 会被判成重复页
   usePageMeta({
     title: titleFor(sid, iid),
-    description: "Campus-Auth 中文文档：安装上手、配置方案、认证任务、自动化与系统设置。",
+    description: "认证喵（Campus-Auth）中文文档：安装上手、方案、认证任务、自动化与系统设置。",
     path: `/docs/${sid}/${iid}`,
   });
 

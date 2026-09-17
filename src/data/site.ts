@@ -1,10 +1,10 @@
 // 单一事实来源：版本、仓库、下载、导航
 export const SITE = {
-  name: "Campus-Auth",
-  title: "Campus-Auth — 校园网自动登录工具",
+  name: "认证喵",
+  title: "认证喵 — Campus-Auth 校园网自动认证工具",
   description:
-    "校园网自动登录工具：支持断网自动重连与多网络配置切换。基于真实浏览器执行登录流程，支持验证码自动识别与定时任务。Rust 单文件发行，解压即用，账号数据仅保存在本地。",
-  version: "5.0.0-alpha.8",
+    "认证喵（Campus-Auth）是校园网自动认证工具：支持断网自动重连与多网络配置切换，既可用真实浏览器执行复杂登录，也支持直连请求登录。账号数据仅保存在本地。",
+  version: "5.0.0-alpha.10",
   repo: "https://github.com/Misyra/Campus-Auth-rs",
   releaseBase: "https://github.com/Misyra/Campus-Auth-rs/releases",
   qqGroup: "1105307735",
@@ -58,13 +58,13 @@ export const FAQS: { q: string; a: string; href?: string; linkLabel?: string }[]
   },
   {
     q: "断网后为什么没有自动触发？",
-    a: "请检查设置 → 网络监测中是否启用了至少一种检测方式（默认启用 204 检测）；并确认当前配置方案中的认证地址与校园网一致。",
+    a: "请检查设置 → 网络检测中是否启用了至少一种检测方式（默认启用 204 检测），并确认已启动监测；同时核对当前方案中的认证地址与校园网一致。",
     href: "/docs/automation/monitor",
     linkLabel: "查看断网检测",
   },
   {
     q: "uv / Python 环境下载失败怎么办？",
-    a: "通常由校园网未认证、代理不通或镜像限速引起：请先完成校园网认证，再于设置 → 系统中点击“初始化 Python 环境”重试；使用代理的环境请先在系统设置中填写代理地址。",
+    a: "通常由校园网未认证、代理不通或镜像限速引起：请先完成校园网认证，再于设置 → 任务与环境中点击“初始化 Python 环境”重试；使用代理的环境请先在设置 → 网络与更新中填写代理地址。",
     href: "/docs/faq/troubleshoot",
     linkLabel: "查看排障指南",
   },
@@ -76,12 +76,12 @@ export const FAQS: { q: string; a: string; href?: string; linkLabel?: string }[]
   },
   {
     q: "多校区、双运营商怎么配？",
-    a: "每个校区或运营商分别创建一条配置方案，填写网关或 WiFi 匹配规则并绑定各自的任务，系统将自动选用匹配度最高的一条。",
+    a: "每个校区或运营商分别创建一条方案，填写网关或 WiFi 匹配规则，并在方案中选择对应的浏览器任务；开启自动切换后系统会自动选用匹配度最高的一条。",
     href: "/docs/profiles/match",
     linkLabel: "查看自动匹配",
   },
-  { q: "验证码总是识别失败？", a: "识别失败时会自动重试；可适当增大等待时间、在任务中增加截图断言，或在调试面板中复现并导出反馈包。", href: "/docs/tasks/debug", linkLabel: "查看录制与调试" },
+  { q: "验证码总是识别失败？", a: "先确认已在设置 → 任务与环境安装可选 OCR 依赖；可适当增大等待时间、在任务中增加截图断言，或在调试面板中复现并导出反馈包。", href: "/docs/tasks/debug", linkLabel: "查看录制与调试" },
   { q: "Docker 怎么用？", a: "执行 docker compose up -d --build 即可启动，数据持久化于命名卷中，运行环境已预装。", href: "/docs/getting-started/install", linkLabel: "查看安装与运行" },
-  { q: "如何开机自启？", a: "可在设置 → 系统 → 启动与运行中开启开机自启动，或执行 campus-auth --autostart enable。", href: "/docs/system/cli", linkLabel: "查看常用命令与文件说明" },
-  { q: "离线能用吗？", a: "认证与定时任务均在本地执行，离线可用；仅 AI 生成功能与版本检查需要联网。" },
+  { q: "如何开机自启？", a: "可在设置 → 系统 → 启动与运行中开启开机自启动，或执行 campus-auth --autostart enable。新配置默认不会自动开始监测，可另外设置启动动作。", href: "/docs/system/cli", linkLabel: "查看常用命令与文件说明" },
+  { q: "离线能用吗？", a: "认证与定时任务均在本地执行；直连请求登录不需要 Python 或浏览器。AI 生成功能、版本检查以及首次准备浏览器运行环境仍需要联网。" },
 ];

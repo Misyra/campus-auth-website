@@ -27,6 +27,7 @@ export const DOC_SECTIONS: DocSection[] = [
       { id: "overview", title: "配置方案概览" },
       { id: "match", title: "自动匹配网络" },
       { id: "redirect", title: "劫持门户（重定向）" },
+      { id: "http-login", title: "直连请求登录" },
     ],
   },
   {
@@ -34,11 +35,11 @@ export const DOC_SECTIONS: DocSection[] = [
     title: "任务",
     icon: <Layers className="h-4 w-4" />,
     items: [
-      { id: "concepts", title: "三类任务" },
+      { id: "concepts", title: "两类任务" },
       { id: "recorder", title: "任务录制器" },
       { id: "browser", title: "浏览器任务" },
       { id: "variables", title: "变量与成功判定" },
-      { id: "scripts", title: "脚本与 Shell 任务" },
+      { id: "scripts", title: "脚本任务" },
       { id: "debug", title: "调试与取证" },
       { id: "repo", title: "从仓库下载共享任务" },
     ],
@@ -49,6 +50,7 @@ export const DOC_SECTIONS: DocSection[] = [
     icon: <Zap className="h-4 w-4" />,
     items: [
       { id: "monitor", title: "断网自动重连" },
+      { id: "detection", title: "网络检测原理" },
       { id: "scheduled", title: "定时任务" },
       { id: "autostart", title: "开机自启与托盘" },
     ],

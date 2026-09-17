@@ -10,6 +10,7 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
     overview: "2-profiles/2.1-overview.md",
     match: "2-profiles/2.2-match.md",
     redirect: "2-profiles/2.3-redirect.md",
+    "http-login": "2-profiles/2.4-http-login.md",
   },
   tasks: {
     default: "3-tasks/3.1-concepts.md",
@@ -24,6 +25,7 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
   automation: {
     default: "4-automation/4.1-monitor.md",
     monitor: "4-automation/4.1-monitor.md",
+    detection: "4-automation/4.4-network-detection.md",
     scheduled: "4-automation/4.2-scheduled.md",
     autostart: "4-automation/4.3-autostart.md",
   },

@@ -8,7 +8,7 @@ export function getDocRoutes() {
   if (!mapMatch) throw new Error("DOC_PATH_MAP not found in src/content/docs/index.ts");
   // section 键可能是带引号（"getting-started"）或裸标识符（profiles）两种写法
   const sectionRe = /"?([\w-]+)"?:\s*\{([^}]*)\}/g;
-  const itemRe = /([A-Za-z0-9_-]+):\s*"([^"]+)"/g;
+  const itemRe = /"?([A-Za-z0-9_-]+)"?:\s*"([^"]+)"/g;
   const routes = [];
   let m;
   while ((m = sectionRe.exec(mapMatch[1]))) {

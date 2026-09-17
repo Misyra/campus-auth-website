@@ -55,7 +55,7 @@ pnpm build
 ## 站点信息
 
 - 仓库：https://github.com/Misyra/Campus-Auth-rs
-- 版本：5.0.0-alpha.8
+- 版本：5.0.0-alpha.10
 
 ## 协议
 

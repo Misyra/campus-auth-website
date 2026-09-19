@@ -11,6 +11,7 @@ import "prismjs/components/prism-json.js";
 import "prismjs/components/prism-css.js";
 import "prismjs/components/prism-sql.js";
 import "prismjs/components/prism-python.js";
+import "prismjs/components/prism-rust.js";
 import "prismjs/components/prism-yaml.js";
 import "prismjs/components/prism-toml.js";
 import "prismjs/components/prism-jsx.js";
@@ -50,6 +51,17 @@ renderer.code = function ({ text, lang }) {
   const grammar = Prism.languages[language] || Prism.languages.clike;
   const highlighted = Prism.highlight(text, grammar, language);
   return `<pre class="language-${language}"><code class="language-${language}">${highlighted}</code></pre>\n`;
+};
+// 文档截图统一为 1280×720：构建期写入固有尺寸，避免懒加载图片造成的布局偏移（CLS）。
+// 引用 .avif 的截图输出 <picture>（AVIF 优先 + WebP 兜底，兼容不支持 AVIF 的旧浏览器）
+renderer.image = function ({ href, text }) {
+  const src = String(href);
+  const alt = text ?? "";
+  if (/\.avif$/i.test(src)) {
+    const webp = src.replace(/\.avif$/i, ".webp");
+    return `<picture><source srcset="${src}" type="image/avif" /><img src="${webp}" alt="${alt}" width="1280" height="720" loading="lazy" decoding="async" /></picture>\n`;
+  }
+  return `<img src="${src}" alt="${alt}" width="1280" height="720" loading="lazy" decoding="async" />\n`;
 };
 
 marked.setOptions({
@@ -100,6 +112,9 @@ const DOC_PATH_MAP = {
     startup: "7-faq/7.2-startup.md",
     browser: "7-faq/7.3-browser.md",
     misc: "7-faq/7.4-misc.md",
+  },
+  performance: {
+    overview: "8-performance/8.1-overview.md",
   },
 };
 for (const [sid, items] of Object.entries(DOC_PATH_MAP)) {

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { BookOpen, HelpCircle, Layers, Rocket, ShieldCheck, Wrench, Zap } from "lucide-react";
+import { BookOpen, Gauge, HelpCircle, Layers, Rocket, ShieldCheck, Wrench, Zap } from "lucide-react";
 
 export type DocSection = {
   id: string;
@@ -81,5 +81,11 @@ export const DOC_SECTIONS: DocSection[] = [
       { id: "browser", title: "浏览器与验证码" },
       { id: "misc", title: "定时、自启与更新" },
     ],
+  },
+  {
+    id: "performance",
+    title: "性能分析",
+    icon: <Gauge className="h-4 w-4" />,
+    items: [{ id: "overview", title: "资源占用分析" }],
   },
 ];

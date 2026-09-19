@@ -258,6 +258,197 @@
   .prose-docs .doc-callout--important .doc-callout__label { @apply text-violet-600 dark:text-violet-400; }
   .prose-docs .doc-callout--warning { @apply border-amber-500/30 border-l-amber-500 bg-amber-500/[0.07]; }
   .prose-docs .doc-callout--warning .doc-callout__label { @apply text-amber-600 dark:text-amber-400; }
+
+  /* 性能分析页可视化块 — 内容以原始 HTML 写入 8-performance/8.1-overview.md，
+     这里只提供样式；颜色全部取自站内 token，自动适配明暗主题。 */
+  .prose-docs .perf-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 10px; }
+  .prose-docs .perf-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1px solid hsl(var(--border)); background: hsl(var(--card));
+    border-radius: 999px; padding: 5px 12px;
+    font-size: 12px; line-height: 1.4; color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-chip b { font-weight: 600; color: hsl(var(--foreground)); }
+
+  /* ---- 指标卡 ---- */
+  .prose-docs .perf-kpis {
+    display: grid; gap: 12px; margin: 20px 0 26px;
+    grid-template-columns: repeat(auto-fit, minmax(188px, 1fr));
+  }
+  .prose-docs .perf-kpi {
+    display: flex; flex-direction: column;
+    border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); padding: 15px 17px 16px;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04);
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  }
+  .prose-docs .perf-kpi:hover {
+    border-color: hsl(var(--primary) / 0.35);
+    box-shadow: 0 6px 20px -8px hsl(var(--primary) / 0.25);
+    transform: translateY(-2px);
+  }
+  .prose-docs .perf-kpi__top { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+  .prose-docs .perf-kpi__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; flex: none; border-radius: 8px;
+    background: hsl(var(--primary) / 0.12); color: hsl(var(--primary));
+  }
+  .prose-docs .perf-kpi__label {
+    margin: 0; font-size: 12px; line-height: 1.4;
+    color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-kpi__value {
+    margin: 0; font-size: 23px; font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: hsl(var(--foreground)); font-variant-numeric: tabular-nums;
+  }
+  .prose-docs .perf-kpi__value small {
+    margin-left: 5px; font-size: 12.5px; font-weight: 500; letter-spacing: 0;
+    color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-kpi__note {
+    margin: auto 0 0; padding-top: 9px; font-size: 12px; line-height: 1.55;
+    color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-kpi--ok .perf-kpi__icon { background: hsl(var(--success) / 0.14); color: hsl(var(--success)); }
+  .prose-docs .perf-kpi--warn .perf-kpi__icon { background: hsl(var(--warning) / 0.18); color: hsl(var(--warning)); }
+  .prose-docs .perf-kpi--info .perf-kpi__icon { background: hsl(var(--info) / 0.14); color: hsl(var(--info)); }
+
+  /* ---- 条形图面板 ---- */
+  .prose-docs .perf-bars {
+    display: grid; gap: 13px; margin: 20px 0 24px;
+    border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); padding: 16px 18px 18px;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04);
+  }
+  .prose-docs .perf-bars__head {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 8px; margin-bottom: 3px; padding-bottom: 11px;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  .prose-docs .perf-bars__title {
+    margin: 0; font-size: 12.5px; font-weight: 600; color: hsl(var(--foreground));
+  }
+  .prose-docs .perf-bars__badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 999px; padding: 2px 9px;
+    background: hsl(var(--primary) / 0.1); color: hsl(var(--primary));
+    font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+  }
+  .prose-docs .perf-bar__head {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    justify-content: space-between; gap: 4px 14px; margin-bottom: 6px;
+    font-size: 12.5px; line-height: 1.5; color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-bar__name { font-weight: 500; color: hsl(var(--foreground)); }
+  .prose-docs .perf-bar__name code { font-size: 12px; }
+  .prose-docs .perf-bar__val {
+    font-weight: 600; font-variant-numeric: tabular-nums;
+    color: hsl(var(--primary));
+  }
+  .prose-docs .perf-bar__track {
+    height: 10px; border-radius: 999px; overflow: hidden;
+    background: hsl(var(--muted));
+    box-shadow: inset 0 1px 2px hsl(var(--foreground) / 0.06);
+  }
+  .prose-docs .perf-bar__fill {
+    height: 100%; border-radius: 999px; min-width: 4px;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--info)));
+    box-shadow: 0 1px 3px hsl(var(--primary) / 0.35);
+  }
+  .prose-docs .perf-bar--muted .perf-bar__fill {
+    background: hsl(var(--muted-foreground) / 0.38); box-shadow: none;
+  }
+  .prose-docs .perf-bar--muted .perf-bar__val { color: hsl(var(--muted-foreground)); }
+  .prose-docs .perf-bar--warn .perf-bar__fill {
+    background: linear-gradient(90deg, hsl(var(--warning)), hsl(var(--destructive)));
+    box-shadow: 0 1px 3px hsl(var(--destructive) / 0.35);
+  }
+  .prose-docs .perf-bar--warn .perf-bar__val { color: hsl(var(--destructive)); }
+  .prose-docs .perf-bars__caption {
+    margin: 0; padding-top: 2px; font-size: 12px; line-height: 1.6;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ---- 场景卡：替代列数过多的宽表，窄屏不再把数值折行 ---- */
+  .prose-docs .perf-scenarios { display: grid; gap: 10px; margin: 20px 0 24px; }
+  .prose-docs .perf-scenario {
+    border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+    background: hsl(var(--card)); padding: 13px 16px 15px;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04);
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .prose-docs .perf-scenario:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow: 0 4px 14px -8px hsl(var(--primary) / 0.28);
+  }
+  .prose-docs .perf-scenario--hot { border-color: hsl(var(--warning) / 0.45); }
+  .prose-docs .perf-scenario__head {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 11px; margin-bottom: 12px;
+    border-bottom: 1px dashed hsl(var(--border));
+  }
+  .prose-docs .perf-scenario__idx {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; flex: none; border-radius: 7px;
+    background: hsl(var(--primary) / 0.12); color: hsl(var(--primary));
+    font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .prose-docs .perf-scenario--hot .perf-scenario__idx {
+    background: hsl(var(--warning) / 0.18); color: hsl(var(--warning));
+  }
+  .prose-docs .perf-scenario__name {
+    flex: 1 1 auto; min-width: 0;
+    font-size: 13.5px; font-weight: 600; color: hsl(var(--foreground));
+  }
+  .prose-docs .perf-scenario__win {
+    flex: none; border-radius: 999px; padding: 2px 10px;
+    background: hsl(var(--muted)); color: hsl(var(--muted-foreground));
+    font-size: 11.5px; font-variant-numeric: tabular-nums;
+  }
+  .prose-docs .perf-scenario__metrics {
+    display: grid; gap: 11px 16px;
+    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  }
+  .prose-docs .perf-scenario__note {
+    margin: 11px 0 0; font-size: 12px; line-height: 1.6;
+    color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-metric__k {
+    display: block; margin: 0 0 3px; font-size: 11px; line-height: 1.4;
+    color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-metric__v {
+    display: block; margin: 0; white-space: nowrap;
+    font-size: 13.5px; font-weight: 600; line-height: 1.4;
+    color: hsl(var(--foreground)); font-variant-numeric: tabular-nums;
+  }
+  .prose-docs .perf-metric--hot .perf-metric__v { color: hsl(var(--primary)); }
+  .prose-docs .perf-metric--dim .perf-metric__v { color: hsl(var(--muted-foreground)); font-weight: 500; }
+
+  /* ---- 内存构成堆叠条 ---- */
+  .prose-docs .perf-stack {
+    display: flex; height: 38px; overflow: hidden; margin: 20px 0 10px;
+    border: 1px solid hsl(var(--border)); border-radius: 10px;
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 0.04);
+  }
+  .prose-docs .perf-stack__seg {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 0; overflow: hidden; white-space: nowrap;
+    font-size: 12px; font-weight: 600; color: hsl(var(--primary-foreground));
+  }
+  .prose-docs .perf-stack__seg--private { background: hsl(var(--primary)); }
+  .prose-docs .perf-stack__seg--shared {
+    background: hsl(var(--info) / 0.42); color: hsl(var(--foreground));
+  }
+  .prose-docs .perf-legend {
+    display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 24px;
+    font-size: 12px; line-height: 1.6; color: hsl(var(--muted-foreground));
+  }
+  .prose-docs .perf-legend i {
+    display: inline-block; width: 10px; height: 10px;
+    margin-right: 7px; border-radius: 3px; vertical-align: baseline;
+  }
 }
 
 /* Prism — 跟随站内 token，不另起主题包 */

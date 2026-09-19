@@ -46,6 +46,10 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
     browser: "7-faq/7.3-browser.md",
     misc: "7-faq/7.4-misc.md",
   },
+  performance: {
+    default: "8-performance/8.1-overview.md",
+    overview: "8-performance/8.1-overview.md",
+  },
 };
 
 // 2026-09 文档结构重组：旧 section/item 组合一律重定向到新路由，

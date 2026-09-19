@@ -23,12 +23,15 @@ export function HeroSection() {
               </div>
 
               <div className="mt-6 flex items-center justify-center gap-3 lg:justify-start">
-                <img src="/logo.png" alt="Campus-Auth" width={64} height={64} className="h-14 w-14 rounded-xl bg-white p-1.5 shadow-md md:h-16 md:w-16" />
-                <h1 className="text-[32px] font-extrabold tracking-tight md:text-[48px] lg:text-[52px]">Campus-Auth</h1>
+                <img src="/logo.png" alt="认证喵 Campus-Auth" width={64} height={64} className="h-14 w-14 rounded-xl bg-white p-1.5 shadow-md md:h-16 md:w-16" />
+                <div>
+                  <h1 className="text-[32px] font-extrabold tracking-tight md:text-[48px] lg:text-[52px]">认证喵</h1>
+                  <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground md:text-sm">Campus-Auth</p>
+                </div>
               </div>
 
-              <p className="mx-auto mt-5 max-w-[520px] text-[18px] font-semibold leading-relaxed md:text-[24px] lg:mx-0">
-                校园网自动登录工具，<span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">断网重连</span>、多网络自动切换
+              <p className="mx-auto mt-5 max-w-[560px] text-balance text-[18px] font-semibold leading-relaxed md:text-[24px] lg:mx-0">
+                校园网自动登录工具，<span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">断网重连、多网络自动切换</span>
               </p>
               <p className="mx-auto mt-4 max-w-[540px] text-sm leading-relaxed text-muted-foreground md:text-[16px] lg:mx-0">
                 断线自动重连，更换网络时自动匹配配置，验证码自动识别。单文件发行，解压即用，无需注册，账号数据仅保存在本地。

@@ -95,7 +95,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
       pushLog("INFO", "login", "登录成功（演示模式）");
       setLoginCount((c) => c + 1);
       setHistory((h) =>
-        [{ time: fmtFull(new Date()), duration: "4.2s", profile: "默认配置方案", source: "手动登录", ok: true }, ...h].slice(0, 8),
+        [{ time: fmtFull(new Date()), duration: "4.2s", profile: "默认网络 · manual", source: "手动登录", ok: true }, ...h].slice(0, 8),
       );
       setLoginBusy(false);
       showToast("手动登录完成（演示）");
@@ -161,7 +161,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
                       </button>
                     </div>
                     <div className="rounded-md bg-muted/60 px-2 py-1.5 text-[11px]">
-                      <span className="font-medium text-cyan-600 dark:text-cyan-400">检测</span>
+                      <span className="font-medium text-primary">检测</span>
                       <span className="ml-1 text-muted-foreground">网络状态变化: Offline → Online</span>
                     </div>
                     <div className="mt-1.5 text-center text-[10px] text-muted-foreground">演示数据</div>
@@ -171,7 +171,7 @@ export function ConsoleMock({ compact = false }: { compact?: boolean }) {
             </div>
             <button
               onClick={toggleMonitor}
-              className="inline-flex items-center gap-1.5 rounded-md bg-cyan-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-cyan-500"
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90"
               title={monitoring ? "停止网络检测和自动登录" : "开始检测网络，断网时自动登录"}
             >
               {monitoring ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}

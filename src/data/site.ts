@@ -4,7 +4,7 @@ export const SITE = {
   title: "认证喵 — Campus-Auth 校园网自动认证工具",
   description:
     "认证喵（Campus-Auth）是校园网自动认证工具：支持断网自动重连与多网络配置切换，既可用真实浏览器执行复杂登录，也支持直连请求登录。账号数据仅保存在本地。",
-  version: "5.0.0-alpha.10",
+  version: "5.0.0",
   repo: "https://github.com/Misyra/Campus-Auth-rs",
   releaseBase: "https://github.com/Misyra/Campus-Auth-rs/releases",
   qqGroup: "1105307735",
@@ -30,23 +30,23 @@ export const FEATURES = [
     icon: "ArrowLeftRight" as const,
   },
   {
-    title: "真浏览器自动化",
-    desc: "基于 Playwright 驱动真实浏览器完成登录操作，支持页面跳转、嵌套框架与下拉选项等情形。",
+    title: "浏览器 · 直连双渠道",
+    desc: "复杂门户用 Playwright 驱动真实浏览器；简单门户可用直连请求登录，免 Python、免浏览器。",
     icon: "Layers" as const,
   },
   {
     title: "验证码 OCR",
-    desc: "自动识别并填写验证码，识别失败时自动重试，无需人工输入。",
+    desc: "自动识别并填写图形验证码，无需人工输入；滑块与短信验证码不支持。",
     icon: "ScanSearch" as const,
   },
   {
     title: "定时打卡",
-    desc: "支持以 cron 表达式配置每日签到与在线保活任务，到达设定时间自动执行。",
+    desc: "支持每日定时与「启动后执行」两种触发，可限制每日成功次数，签到保活不漏跑。",
     icon: "Clock3" as const,
   },
   {
     title: "控制台 · AI 生成",
-    desc: "提供本地 Web 控制台与系统托盘。上传登录页截图后，可由 AI 生成可用的任务配置。",
+    desc: "本地 Web 控制台与系统托盘常驻；捕获登录页后可由 AI 生成任务，内置体验 Key 开箱即用。",
     icon: "Sparkles" as const,
   },
 ];
@@ -65,13 +65,13 @@ export const FAQS: { q: string; a: string; href?: string; linkLabel?: string }[]
   {
     q: "uv / Python 环境下载失败怎么办？",
     a: "通常由校园网未认证、代理不通或镜像限速引起：请先完成校园网认证，再于设置 → 任务与环境中点击“初始化 Python 环境”重试；使用代理的环境请先在设置 → 网络与更新中填写代理地址。",
-    href: "/docs/faq/troubleshoot",
+    href: "/docs/faq/startup",
     linkLabel: "查看排障指南",
   },
   {
     q: "Playwright 浏览器一直装不上？",
     a: "默认使用 npmmirror 镜像下载；若本机已安装 Edge 或 Chrome，可直接复用，无需下载。若安装失败，可在设置 → 浏览器中一键安装 Chromium，或检查代理设置与磁盘空间。",
-    href: "/docs/faq/troubleshoot",
+    href: "/docs/faq/startup",
     linkLabel: "查看排障指南",
   },
   {
@@ -81,7 +81,13 @@ export const FAQS: { q: string; a: string; href?: string; linkLabel?: string }[]
     linkLabel: "查看自动匹配",
   },
   { q: "验证码总是识别失败？", a: "先确认已在设置 → 任务与环境安装可选 OCR 依赖；可适当增大等待时间、在任务中增加截图断言，或在调试面板中复现并导出反馈包。", href: "/docs/tasks/debug", linkLabel: "查看录制与调试" },
-  { q: "Docker 怎么用？", a: "执行 docker compose up -d --build 即可启动，数据持久化于命名卷中，运行环境已预装。", href: "/docs/getting-started/install", linkLabel: "查看安装与运行" },
-  { q: "如何开机自启？", a: "可在设置 → 系统 → 启动与运行中开启开机自启动，或执行 campus-auth --autostart enable。新配置默认不会自动开始监测，可另外设置启动动作。", href: "/docs/system/cli", linkLabel: "查看常用命令与文件说明" },
+  { q: "Docker 怎么用？", a: "执行 docker compose pull && docker compose up -d 即可启动（默认拉取 GHCR 预构建镜像），数据持久化于命名卷中，运行环境已预装。", href: "/docs/getting-started/install", linkLabel: "查看安装与运行" },
+  { q: "如何开机自启？", a: "可在设置 → 系统 → 启动与运行中开启开机自启动，或执行 campus-auth --autostart enable。新配置默认不会自动开始监测，可另外设置启动动作。", href: "/docs/maintenance/cli", linkLabel: "查看常用命令与文件说明" },
   { q: "离线能用吗？", a: "认证与定时任务均在本地执行；直连请求登录不需要 Python 或浏览器。AI 生成功能、版本检查以及首次准备浏览器运行环境仍需要联网。" },
+  {
+    q: "为什么新安装后程序不会自动检测？",
+    a: "v5.0.0 起「启动后执行」默认为「无操作」：程序启动后停在待命状态，避免无谓的探测流量。在仪表盘右上角点击「启动检测」即可开始；希望开机即自动守护时，在 设置 → 系统 把「启动后执行」改为「进入监测」。",
+    href: "/docs/automation/monitor",
+    linkLabel: "查看断网自动重连",
+  },
 ];

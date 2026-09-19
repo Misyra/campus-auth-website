@@ -12,8 +12,16 @@ export function TechSection() {
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="overflow-hidden rounded-2xl border bg-card shadow-xl">
             <picture>
-              <source srcSet="/screenshots/browser.avif" type="image/avif" />
-              <img src="/screenshots/browser.webp" alt="" width={1280} height={800} className="w-full object-contain" loading="lazy" decoding="async" />
+              <source srcSet="/screenshots/docs/18-debug.avif" type="image/avif" />
+              <img
+                src="/screenshots/docs/18-debug.webp"
+                alt="任务调试面板：单步执行、实时截图与问题报告"
+                width={1280}
+                height={720}
+                className="w-full object-contain"
+                loading="lazy"
+                decoding="async"
+              />
             </picture>
           </div>
 

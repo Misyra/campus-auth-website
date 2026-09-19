@@ -83,7 +83,7 @@ export function ConsoleLogPanel({
         <span className="text-xs font-semibold">实时日志</span>
         <div className="flex items-center gap-1">
           <button
-            className={cn(ICON_BTN, "h-6 w-6", autoScroll && "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400")}
+            className={cn(ICON_BTN, "h-6 w-6", autoScroll && "bg-primary/10 text-primary")}
             title={autoScroll ? "自动滚动：开" : "自动滚动：关"}
             onClick={onToggleAutoScroll}
           >
@@ -129,7 +129,7 @@ export function ConsoleLogPanel({
               value={search}
               onChange={(e) => onSearch(e.target.value)}
               placeholder="搜索日志..."
-              className="h-6 w-full rounded-md border bg-background pl-6 pr-1.5 text-[11px] outline-none focus:border-cyan-500/60"
+              className="h-6 w-full rounded-md border bg-background pl-6 pr-1.5 text-[11px] outline-none focus:border-primary/60"
             />
           </div>
         </div>

@@ -49,6 +49,11 @@ const server = createServer((req, res) => {
 await new Promise((r) => server.listen(PORT, "127.0.0.1", r));
 const origin = `http://127.0.0.1:${PORT}`;
 
+// 运行时注入的懒加载 <link rel="modulepreload"> 会被浏览器解析成绝对 origin，
+// 直接序列化会把 127.0.0.1:4173 带进线上 HTML；写回前统一还原为相对路径
+const snapshot = async () => (await page.content()).replaceAll(origin, "");
+const written = [];
+
 const routes = [
   "/",
   "/download",
@@ -69,10 +74,12 @@ for (const route of routes) {
     // 等 React 挂载完成 + 动画结束（入场动画最长 ~0.6s）
     await page.waitForFunction(() => (document.querySelector("#root")?.childElementCount ?? 0) > 0, { timeout: 10000 });
     await page.waitForTimeout(800);
-    const html = await page.content();
+    const html = await snapshot();
     const outDir = path.join(DIST, route === "/" ? "" : route);
     mkdirSync(outDir, { recursive: true });
-    writeFileSync(path.join(outDir, "index.html"), html);
+    const outFile = path.join(outDir, "index.html");
+    writeFileSync(outFile, html);
+    written.push(outFile);
     console.log(`prerendered ${route || "/"}`);
   } catch (e) {
     failed++;
@@ -84,11 +91,21 @@ for (const route of routes) {
 try {
   await page.goto(`${origin}/__not_found__`, { waitUntil: "networkidle", timeout: 15000 });
   await page.waitForTimeout(800);
-  writeFileSync(path.join(DIST, "404.html"), await page.content());
+  const outFile = path.join(DIST, "404.html");
+  writeFileSync(outFile, await snapshot());
+  written.push(outFile);
   console.log("prerendered /404.html");
 } catch (e) {
   console.error(`FAILED 404: ${e.message}`);
   failed++;
+}
+
+// 防回归：任何产物残留预渲染 origin 都直接判构建失败
+for (const file of written) {
+  if (readFileSync(file, "utf8").includes(origin)) {
+    console.error(`ORIGIN LEAKED: ${file}`);
+    failed++;
+  }
 }
 
 await browser.close();

@@ -30,8 +30,14 @@ export function DocsSearch({ isOpen, onClose, onNavigate }: { isOpen: boolean; o
     for (const s of DOC_SECTIONS) {
       for (const it of s.items) {
         if (out.length >= 8) break;
-        const md = getDocContent(s.id, it.id);
-        const plain = md.replace(/[#*`>[\]()]/g, " ").toLowerCase();
+        // getDocContent 返回的是构建期渲染好的 HTML（见 scripts/markdown-plugin.mjs），
+        // 检索前必须先剥掉标签，否则摘要里会漏出 <code / <strong 这类片段
+        const html = getDocContent(s.id, it.id);
+        const plain = html
+          .replace(/<[^>]*>/g, " ")
+          .replace(/&(?:lt|gt|amp|quot|#39|nbsp);/g, " ")
+          .replace(/[#*`>[\]()]/g, " ")
+          .toLowerCase();
         const pos = plain.indexOf(low);
         if (pos >= 0) {
           const start = Math.max(0, pos - 32);

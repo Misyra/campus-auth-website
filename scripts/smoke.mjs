@@ -32,7 +32,7 @@ await check("direct doc page renders content", async () => {
 
 await check("/docs redirects to default doc", async () => {
   await page.goto(`${origin}/docs`, { waitUntil: "networkidle" });
-  await page.waitForURL("**/docs/getting-started/introduction", { timeout: 5000 });
+  await page.waitForURL("**/docs/getting-started/start", { timeout: 5000 });
 });
 
 await check("legacy ?section=&item= redirects to path URL", async () => {
@@ -41,9 +41,11 @@ await check("legacy ?section=&item= redirects to path URL", async () => {
 });
 
 await check("sidebar navigation (client-side)", async () => {
-  await page.goto(`${origin}/docs/getting-started/introduction`, { waitUntil: "networkidle" });
-  await page.locator("button", { hasText: "任务系统" }).first().click();
-  await page.waitForURL("**/docs/tasks/**", { timeout: 5000 });
+  await page.goto(`${origin}/docs/getting-started/start`, { waitUntil: "networkidle" });
+  // 侧栏「任务」是折叠区块：先展开，再点其中的文档条目
+  await page.locator("button", { hasText: "任务" }).first().click();
+  await page.locator('a[href="/docs/tasks/browser"]').first().click();
+  await page.waitForURL("**/docs/tasks/browser", { timeout: 5000 });
   await page.waitForSelector("h1");
 });
 

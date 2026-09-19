@@ -1,6 +1,6 @@
-# Campus-Auth 官网
+# 认证喵（Campus-Auth）官网
 
-Rust 重写版 `Campus-Auth-rs` 的官网，参考 `farion1231/cc-switch-website` 的质感与信息架构。
+Rust 重写版 `Campus-Auth-rs` 的官网与使用文档，参考 `farion1231/cc-switch-website` 的质感与信息架构。
 
 ## 本地开发
 
@@ -9,36 +9,42 @@ cd E:/campus-auth-website
 pnpm install
 pnpm dev      # http://localhost:5173
 pnpm lint && pnpm typecheck   # eslint 9 flat config / tsc -b
-pnpm build && pnpm preview    # build 前会自动重新生成 sitemap
+pnpm check:docs               # 校验文档相对链接与 /docs 路由（27 篇 + 35 条路由）
+pnpm smoke                    # 冒烟测试（需先 pnpm build；校验路由/侧栏/搜索/下载页）
+pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 release 快照
 ```
+
+## 文档
+
+中文文档源为 `src/content/docs/zh/` 下的 Markdown（8 个章节、27 篇），构建时由
+`scripts/markdown-plugin.mjs` 渲染为 HTML（GFM 提示块、站内链接改写、Prism 高亮、
+截图写入 1280×720 固有尺寸防 CLS）。新增/调整章节需同步：
+
+- `src/content/docs/index.ts` 与 `scripts/markdown-plugin.mjs` 的 `DOC_PATH_MAP`
+- `src/content/docs/navigation.tsx` 的侧栏目录
+- `public/sitemap.xml`（或依赖构建时 `generate-sitemap.mjs`）
+
+## 截图
+
+- **文档截图**（`public/screenshots/docs/*.webp`，1280×720）：来自 v5.0.0 全新安装实例
+  实拍。重拍方式：启动应用（`campus-auth.exe --base-path <空目录> --no-browser --no-tray`），
+  用浏览器自动化按 [快速开始](src/content/docs/zh/1-getting-started/1.1-start.md) 的步骤逐页
+  截取，转 webp（`sharp`，quality 82）后替换同名文件。
+- **首页演示**：Hero 的 ConsoleMock 为手绘 React 动效组件
+  （`src/components/campus-auth/console-mock/`），文案与 v5.0.0 真实启动序列保持一致；
+  「控制台界面」标签页直接引用 `public/screenshots/docs/` 下的实拍图。
 
 ## 字体
 
-Inter / Fira Code 已自托管（latin 子集可变字体，`public/fonts/`），不依赖 fonts.googleapis.com（大陆不可达）。中文回退系统字体。如需更新字体：
+Inter / Fira Code 已自托管（latin 子集可变字体，`public/fonts/`），不依赖 fonts.googleapis.com（大陆不可达）。中文使用 Noto Sans SC（站点按需分片加载），回退系统字体。如需更新字体：
 
 ```bash
 pnpm fonts   # node scripts/fetch-fonts.mjs
 ```
 
-## 真实截图
-
-官网的 `public/screenshots/*.webp` 来自本机管理后台实拍（`http://127.0.0.1:50721`）：
-
-```bash
-# 先启动后端（frontend/dist 已存在则直接可用）
-cargo run --manifest-path E:/Campus-Auth-rs/Cargo.toml -- --port 50721
-
-# 抓取 10 张页面截图
-NO_PROXY="*" no_proxy="*" node scripts/capture.mjs
-
-pnpm build
-```
-
-> 注意：本机若配置了系统代理（http_proxy 指向 127.0.0.1:7890），curl/Playwright 访问 127.0.0.1 需走 `NO_PROXY="*"` 绕过代理，否则会得到 502。
-
 ## 部署
 
-Cloudflare Pages：`wrangler.toml` 的 `pages_build_output_dir = "dist"`，配合 `public/_headers` / `public/_redirects`。
+Cloudflare Pages：`wrangler.jsonc` 配合 `public/_headers` / `public/_redirects`。
 
 ```bash
 pnpm build
@@ -47,15 +53,19 @@ pnpm build
 
 ## 目录
 
-- `src/components/campus-auth/` — Hero / Features / Demo / Tech / Scenarios / Screenshots / FAQ / Download / CTA
-- `src/data/site.ts` — 版本、仓库、下载资产等单一事实来源
-- `public/screenshots/` — Playwright 实拍（tasks/scheduled/monitor/browser，与官网引用一一对应）
-- `scripts/capture.mjs` / `scripts/generate-sitemap.mjs`
+- `src/content/docs/zh/` — 中文文档源（Markdown，构建期渲染）
+- `src/components/campus-auth/` — Hero / Features / Demo / Tech / FAQ / Download / CTA
+- `src/components/docs/` — 文档页组件（侧栏、目录、搜索、Markdown 渲染与图片灯箱）
+- `src/data/site.ts` — 版本、仓库、FAQ 等单一事实来源
+- `src/data/changelog.ts` — 更新日志页的精选数据（完整记录见仓库 docs/updatelog.md）
+- `public/screenshots/docs/` — 文档与首页引用的 v5.0.0 实拍截图
+- `scripts/check-doc-links.mjs` — 文档链接 QA（pnpm check:docs）
+- `scripts/markdown-plugin.mjs` — 构建期 Markdown 渲染
 
 ## 站点信息
 
 - 仓库：https://github.com/Misyra/Campus-Auth-rs
-- 版本：5.0.0-alpha.10
+- 当前版本：5.0.0（构建时由 `scripts/fetch-release.mjs` 自动同步）
 
 ## 协议
 

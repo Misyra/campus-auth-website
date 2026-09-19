@@ -99,16 +99,49 @@ export function MarkdownRenderer({ content, className }: { content: string; clas
       a.setAttribute("rel", "noopener noreferrer");
     });
 
-    // 图片懒加载
+    // 图片懒加载 + 点击放大（文档截图含界面小字，单击查看原始尺寸，ESC 或点击任意处关闭）。
+    // 遮罩挂到 document.body：挂在正文容器内时，祖先的 transform/模糊会使 fixed
+    // 退化为相对窄栏定位，遮罩盖不住全屏、大图也被卡在栏宽。
     const imgs = container.querySelectorAll("img");
+    const closeOverlay = () => {
+      document.querySelector(".doc-img-zoom")?.remove();
+      document.body.style.removeProperty("overflow");
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeOverlay();
+    };
     imgs.forEach((img) => {
       img.setAttribute("loading", "lazy");
       img.setAttribute("decoding", "async");
-      img.classList.add("my-6", "max-w-full", "rounded-xl", "border", "shadow-lg");
+      img.classList.add("my-6", "max-w-full", "cursor-zoom-in", "rounded-xl", "border", "shadow-lg");
+      const onClick = () => {
+        closeOverlay();
+        const overlay = document.createElement("div");
+        overlay.className =
+          "doc-img-zoom fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-background/85 p-6 backdrop-blur-sm";
+        overlay.setAttribute("role", "dialog");
+        overlay.setAttribute("aria-label", "查看大图（点击任意处或按 ESC 关闭）");
+        const big = document.createElement("img");
+        // currentSrc 取实际渲染的格式（AVIF 优先），比getAttribute("src") 更准
+        big.src = img.currentSrc || img.getAttribute("src") || "";
+        big.alt = img.alt;
+        big.className = "max-h-[92vh] max-w-full rounded-xl border bg-card shadow-2xl";
+        overlay.appendChild(big);
+        overlay.addEventListener("click", closeOverlay);
+        document.addEventListener("keydown", onKey);
+        document.body.style.setProperty("overflow", "hidden");
+        document.body.appendChild(overlay);
+      };
+      img.addEventListener("click", onClick);
+      cleanups.push(() => {
+        img.removeEventListener("click", onClick);
+      });
     });
 
     return () => {
       cleanups.forEach((fn) => fn());
+      document.removeEventListener("keydown", onKey);
+      closeOverlay();
     };
   }, [content]);
 

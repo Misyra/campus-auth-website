@@ -9,6 +9,8 @@
     "build": "node scripts/fetch-release.mjs && node scripts/generate-sitemap.mjs && vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
+    "check:docs": "node scripts/check-doc-links.mjs",
+    "smoke": "node scripts/smoke.mjs && node scripts/smoke-routes.mjs",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",

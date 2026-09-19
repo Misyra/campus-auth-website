@@ -26,7 +26,7 @@ export const DOC_SECTIONS: DocSection[] = [
     items: [
       { id: "overview", title: "配置方案概览" },
       { id: "match", title: "自动匹配网络" },
-      { id: "redirect", title: "劫持门户（重定向）" },
+      { id: "redirect", title: "认证地址与重定向" },
       { id: "http-login", title: "直连请求登录" },
     ],
   },

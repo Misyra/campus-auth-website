@@ -29,6 +29,20 @@ function titleFor(sid: string, iid: string): string {
   return it ? `${it.title} — ${g!.title} · Campus-Auth 文档` : `${g?.title ?? "文档"} · Campus-Auth 文档`;
 }
 
+const DEFAULT_DOC_DESCRIPTION = "认证喵（Campus-Auth）中文文档：安装上手、方案、认证任务、自动化与系统设置。";
+
+// 每页独立的 meta description：从正文首个 <p> 提取纯文本（约 110 字内），
+// 全站共用一句 description 会让文档页在搜索结果里难以区分
+function descriptionFor(html: string): string {
+  const paragraph = html.match(/<p[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "";
+  const text = paragraph
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!text) return DEFAULT_DOC_DESCRIPTION;
+  return text.length > 110 ? `${text.slice(0, 110).trimEnd()}…` : text;
+}
+
 export default function DocsPage() {
   const navigate = useNavigate();
   const { section, item } = useParams();
@@ -60,7 +74,7 @@ export default function DocsPage() {
   // 26 个文档 URL 会被判成重复页
   usePageMeta({
     title: titleFor(sid, iid),
-    description: "认证喵（Campus-Auth）中文文档：安装上手、方案、认证任务、自动化与系统设置。",
+    description: descriptionFor(content),
     path: `/docs/${sid}/${iid}`,
   });
 

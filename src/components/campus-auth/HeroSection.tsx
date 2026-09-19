@@ -25,7 +25,10 @@ export function HeroSection() {
               <div className="mt-6 flex items-center justify-center gap-3 lg:justify-start">
                 <img src="/logo.png" alt="认证喵 Campus-Auth" width={64} height={64} className="h-14 w-14 rounded-xl bg-white p-1.5 shadow-md md:h-16 md:w-16" />
                 <div>
-                  <h1 className="text-[32px] font-extrabold tracking-tight md:text-[48px] lg:text-[52px]">认证喵</h1>
+                  <h1 className="text-[32px] font-extrabold tracking-tight md:text-[48px] lg:text-[52px]">
+                    认证喵
+                    <span className="mt-1 block text-sm font-semibold tracking-wide text-muted-foreground md:text-base">校园网自动认证工具</span>
+                  </h1>
                   <p className="font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground md:text-sm">Campus-Auth</p>
                 </div>
               </div>

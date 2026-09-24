@@ -16,7 +16,7 @@ pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 relea
 
 ## 文档
 
-中文文档源为 `src/content/docs/zh/` 下的 Markdown（8 个章节、27 篇），构建时由
+中文文档源为 `src/content/docs/zh/` 下的 Markdown（8 个章节、28 篇），构建时由
 `scripts/markdown-plugin.mjs` 渲染为 HTML（GFM 提示块、站内链接改写、Prism 高亮、
 截图写入 1280×720 固有尺寸防 CLS）。新增/调整章节需同步：
 
@@ -24,12 +24,22 @@ pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 relea
 - `src/content/docs/navigation.tsx` 的侧栏目录
 - `public/sitemap.xml`（或依赖构建时 `generate-sitemap.mjs`）
 
+> [!IMPORTANT]
+> 客户端（`Campus-Auth-rs`）的界面里有若干个按钮**直接指向本站的具体路由**，例如
+> `LoginChannelField.vue` 的「脚本登录文档」→ `/docs/profiles/script-login`。
+> 这些链接不受 `pnpm check:docs` 保护（它只扫本站源码），**改路由名或删页面前先改客户端**，
+> 并在 `src/content/docs/index.ts` 的 `LEGACY_REDIRECTS` 里留一条旧路径重定向——
+> 已发布的客户端版本不会跟着一起更新。
+
 ## 截图
 
-- **文档截图**（`public/screenshots/docs/*.webp`，1280×720）：来自 v5.0.0 全新安装实例
-  实拍。重拍方式：启动应用（`campus-auth.exe --base-path <空目录> --no-browser --no-tray`），
-  用浏览器自动化按 [快速开始](src/content/docs/zh/1-getting-started/1.1-start.md) 的步骤逐页
-  截取，转 webp（`sharp`，quality 82）后替换同名文件。
+- **文档截图**（`public/screenshots/docs/*.avif` + `*.webp`，1280×720）：来自全新安装实例
+  实拍。重拍方式：启动应用（`campus-auth.exe --base-path <空目录> --port <空闲端口> --no-browser --no-tray`，
+  再 `POST /api/agree` 同意条款），用浏览器自动化把视口设为 **1280×720** 后逐页截 PNG，
+  再 `node scripts/optimize-doc-shots.mjs <png 目录>` 生成 avif（quality 52）+ webp（quality 82）
+  并覆盖同名文件；`pnpm check:docs` 会校验两个扩展名都存在。
+  正文插图只写 `.avif`——构建期由 `markdown-plugin.mjs` 包成 `<picture>`（webp 兜底）。
+
 - **首页演示**：Hero 的 ConsoleMock 为手绘 React 动效组件
   （`src/components/campus-auth/console-mock/`），文案与 v5.0.0 真实启动序列保持一致；
   「控制台界面」标签页直接引用 `public/screenshots/docs/` 下的实拍图。

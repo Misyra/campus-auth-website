@@ -83,6 +83,7 @@ const DOC_PATH_MAP = {
     match: "2-profiles/2.2-match.md",
     redirect: "2-profiles/2.3-redirect.md",
     "http-login": "2-profiles/2.4-http-login.md",
+    "script-login": "2-profiles/2.5-script-login.md",
   },
     tasks: {
     concepts: "3-tasks/3.1-concepts.md",

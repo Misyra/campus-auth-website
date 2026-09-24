@@ -11,6 +11,7 @@ const DOC_PATH_MAP: Record<string, Record<string, string>> = {
     match: "2-profiles/2.2-match.md",
     redirect: "2-profiles/2.3-redirect.md",
     "http-login": "2-profiles/2.4-http-login.md",
+    "script-login": "2-profiles/2.5-script-login.md",
   },
   tasks: {
     default: "3-tasks/3.1-concepts.md",
@@ -66,6 +67,9 @@ const LEGACY_REDIRECTS: Record<string, { sid: string; iid: string }> = {
   "reference/system": { sid: "reference", iid: "settings" },
   "reference/files": { sid: "maintenance", iid: "files" },
   "faq/troubleshoot": { sid: "faq", iid: "login" },
+  // 客户端 5.0.2 的「脚本登录文档」按钮指向过 /docs/guides/custom-script（从未存在过的章节），
+  // 保留重定向让已发出的测试版与旧书签不再落到默认首页
+  "guides/custom-script": { sid: "profiles", iid: "script-login" },
 };
 
 // 文档内容构建时由 markdown-plugin 渲染为 HTML（含代码高亮、标题 id、链接转换）

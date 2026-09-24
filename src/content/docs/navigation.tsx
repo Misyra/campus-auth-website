@@ -28,6 +28,7 @@ export const DOC_SECTIONS: DocSection[] = [
       { id: "match", title: "自动匹配网络" },
       { id: "redirect", title: "认证地址与重定向" },
       { id: "http-login", title: "直连请求登录" },
+      { id: "script-login", title: "脚本登录" },
     ],
   },
   {
@@ -35,7 +36,7 @@ export const DOC_SECTIONS: DocSection[] = [
     title: "任务",
     icon: <Layers className="h-4 w-4" />,
     items: [
-      { id: "concepts", title: "两类任务" },
+      { id: "concepts", title: "三类任务" },
       { id: "recorder", title: "任务录制器" },
       { id: "browser", title: "浏览器任务" },
       { id: "variables", title: "变量与成功判定" },

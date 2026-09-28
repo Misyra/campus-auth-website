@@ -6,7 +6,7 @@ import { MacOsWindowBar } from "./MacOsWindowBar";
 
 type Tab = "dashboard" | "profile" | "tasks" | "settings";
 
-// 截图为 v5.1.0 实际控制台（public/screenshots/docs/，1280×720），与文档保持同源；avif 优先、webp 兜底
+// 截图为 v5.1.0 实际控制台（public/screenshots/docs/，1920×1080），与文档保持同源；avif 优先、webp 兜底
 const tabs: { key: Tab; label: string; icon: React.ComponentType<{ className?: string }>; shot: string }[] = [
   { key: "dashboard", label: "仪表盘", icon: Gauge, shot: "/screenshots/docs/02-dashboard" },
   { key: "profile", label: "方案", icon: Settings2, shot: "/screenshots/docs/04-profile-auth" },
@@ -46,8 +46,8 @@ export function DemoSection() {
             <img
               src={`${activeShot}.webp`}
               alt={`认证喵控制台 ${tabs.find((t) => t.key === tab)?.label ?? ""}界面截图`}
-              width={1280}
-              height={720}
+              width={1920}
+              height={1080}
               className="w-full object-contain"
               loading="lazy"
               decoding="async"

@@ -16,8 +16,8 @@ export function TechSection() {
               <img
                 src="/screenshots/docs/18-debug.webp"
                 alt="任务调试面板：单步执行、实时截图与问题报告"
-                width={1280}
-                height={720}
+                width={1920}
+                height={1080}
                 className="w-full object-contain"
                 loading="lazy"
                 decoding="async"

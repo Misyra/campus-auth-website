@@ -1,18 +1,18 @@
-// 把重拍的控制台截图（1280×720 PNG）转成文档用的 avif + webp
+// 把重拍的控制台截图（1920×1080 PNG）转成文档用的 avif + webp
 //
 // 用法：node scripts/optimize-doc-shots.mjs <png 或目录> [...]
 //   产物写进 public/screenshots/docs/，文件名沿用源文件名（两侧扩展名各一份）：
 //   - .avif：markdown 里引用的那一份，构建期由 markdown-plugin.mjs 包成 <picture>
 //   - .webp：<img> 兜底，供不支持 AVIF 的旧浏览器（check-doc-links.mjs 会校验两者都在）
 //
-// 尺寸必须是 1280×720（文档正文的固有尺寸假设，见 markdown-plugin.mjs 的 renderer.image）；
-// 不符直接报错而不是悄悄缩放——缩过的截图在页面里会被拉回 1280×720 而变形。
+// 尺寸必须是 1920×1080（文档正文的固有尺寸假设，见 markdown-plugin.mjs 的 renderer.image）；
+// 不符直接报错而不是悄悄缩放——缩过的截图在页面里会被拉回 1920×1080 而变形。
 import { readdirSync, statSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import sharp from "sharp";
 
 const OUT_DIR = "public/screenshots/docs";
-const WANT = { width: 1280, height: 720 };
+const WANT = { width: 1920, height: 1080 };
 const WEBP_QUALITY = 82;
 const AVIF_QUALITY = 52;
 

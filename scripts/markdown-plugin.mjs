@@ -52,16 +52,16 @@ renderer.code = function ({ text, lang }) {
   const highlighted = Prism.highlight(text, grammar, language);
   return `<pre class="language-${language}"><code class="language-${language}">${highlighted}</code></pre>\n`;
 };
-// 文档截图统一为 1280×720：构建期写入固有尺寸，避免懒加载图片造成的布局偏移（CLS）。
+// 文档截图统一为 1920×1080：构建期写入固有尺寸，避免懒加载图片造成的布局偏移（CLS）。
 // 引用 .avif 的截图输出 <picture>（AVIF 优先 + WebP 兜底，兼容不支持 AVIF 的旧浏览器）
 renderer.image = function ({ href, text }) {
   const src = String(href);
   const alt = text ?? "";
   if (/\.avif$/i.test(src)) {
     const webp = src.replace(/\.avif$/i, ".webp");
-    return `<picture><source srcset="${src}" type="image/avif" /><img src="${webp}" alt="${alt}" width="1280" height="720" loading="lazy" decoding="async" /></picture>\n`;
+    return `<picture><source srcset="${src}" type="image/avif" /><img src="${webp}" alt="${alt}" width="1920" height="1080" loading="lazy" decoding="async" /></picture>\n`;
   }
-  return `<img src="${src}" alt="${alt}" width="1280" height="720" loading="lazy" decoding="async" />\n`;
+  return `<img src="${src}" alt="${alt}" width="1920" height="1080" loading="lazy" decoding="async" />\n`;
 };
 
 marked.setOptions({

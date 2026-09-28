@@ -46,7 +46,7 @@ export const FEATURES = [
   },
   {
     title: "控制台 · AI 生成",
-    desc: "本地 Web 控制台与系统托盘常驻；捕获登录页后可由 AI 生成任务，内置体验 Key 开箱即用。",
+    desc: "本地 Web 控制台与系统托盘常驻；捕获登录页后可由 AI 生成任务，支持智谱 GLM、DeepSeek 与自定义服务商。",
     icon: "Sparkles" as const,
   },
 ];

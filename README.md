@@ -18,7 +18,7 @@ pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 relea
 
 中文文档源为 `src/content/docs/zh/` 下的 Markdown（8 个章节、28 篇），构建时由
 `scripts/markdown-plugin.mjs` 渲染为 HTML（GFM 提示块、站内链接改写、Prism 高亮、
-截图写入 1280×720 固有尺寸防 CLS）。新增/调整章节需同步：
+截图写入 1920×1080 固有尺寸防 CLS）。新增/调整章节需同步：
 
 - `src/content/docs/index.ts` 与 `scripts/markdown-plugin.mjs` 的 `DOC_PATH_MAP`
 - `src/content/docs/navigation.tsx` 的侧栏目录
@@ -33,9 +33,9 @@ pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 relea
 
 ## 截图
 
-- **文档截图**（`public/screenshots/docs/*.avif` + `*.webp`，1280×720）：来自全新安装实例
+- **文档截图**（`public/screenshots/docs/*.avif` + `*.webp`，1920×1080）：来自全新安装实例
   实拍。重拍方式：启动应用（`campus-auth.exe --base-path <空目录> --port <空闲端口> --no-browser --no-tray`，
-  再 `POST /api/agree` 同意条款），用浏览器自动化把视口设为 **1280×720** 后逐页截 PNG，
+  再 `POST /api/agree` 同意条款），用浏览器自动化把视口设为 **1920×1080** 后逐页截 PNG，
   再 `node scripts/optimize-doc-shots.mjs <png 目录>` 生成 avif（quality 52）+ webp（quality 82）
   并覆盖同名文件；`pnpm check:docs` 会校验两个扩展名都存在。
   正文插图只写 `.avif`——构建期由 `markdown-plugin.mjs` 包成 `<picture>`（webp 兜底）。

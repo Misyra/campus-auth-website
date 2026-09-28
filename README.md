@@ -5,7 +5,7 @@ Rust 重写版 `Campus-Auth-rs` 的官网与使用文档，参考 `farion1231/cc
 ## 本地开发
 
 ```bash
-cd E:/campus-auth-website
+cd E:/website/campus-auth-website
 pnpm install
 pnpm dev      # http://localhost:5173
 pnpm lint && pnpm typecheck   # eslint 9 flat config / tsc -b
@@ -39,10 +39,12 @@ pnpm build && pnpm preview    # build 前会自动重新生成 sitemap 与 relea
   再 `node scripts/optimize-doc-shots.mjs <png 目录>` 生成 avif（quality 52）+ webp（quality 82）
   并覆盖同名文件；`pnpm check:docs` 会校验两个扩展名都存在。
   正文插图只写 `.avif`——构建期由 `markdown-plugin.mjs` 包成 `<picture>`（webp 兜底）。
+  v5.1.0 任务页改版后需重拍：`11-tasks`、`13-scheduled-new`、`16-http-login`、`17-scripts`，
+  建议顺带核对 `19-repo-import`、`20-script-login`。
 
 - **首页演示**：Hero 的 ConsoleMock 为手绘 React 动效组件
-  （`src/components/campus-auth/console-mock/`），文案与 v5.0.0 真实启动序列保持一致；
-  「控制台界面」标签页直接引用 `public/screenshots/docs/` 下的实拍图。
+  （`src/components/campus-auth/console-mock/`），文案与 v5.1.0 真实启动序列保持一致
+  （仪表盘在 v5.1.0 未变动）；「控制台界面」标签页直接引用 `public/screenshots/docs/` 下的实拍图。
 
 ## 字体
 
@@ -68,14 +70,14 @@ pnpm build
 - `src/components/docs/` — 文档页组件（侧栏、目录、搜索、Markdown 渲染与图片灯箱）
 - `src/data/site.ts` — 版本、仓库、FAQ 等单一事实来源
 - `src/data/changelog.ts` — 更新日志页的精选数据（完整记录见仓库 docs/updatelog.md）
-- `public/screenshots/docs/` — 文档与首页引用的 v5.0.0 实拍截图
+- `public/screenshots/docs/` — 文档与首页引用的实拍截图（v5.1.0 口径）
 - `scripts/check-doc-links.mjs` — 文档链接 QA（pnpm check:docs）
 - `scripts/markdown-plugin.mjs` — 构建期 Markdown 渲染
 
 ## 站点信息
 
 - 仓库：https://github.com/Misyra/Campus-Auth-rs
-- 当前版本：5.0.0（构建时由 `scripts/fetch-release.mjs` 自动同步）
+- 当前版本：5.1.0（构建时由 `scripts/fetch-release.mjs` 自动同步）
 
 ## 协议
 

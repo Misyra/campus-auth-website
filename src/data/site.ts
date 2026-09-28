@@ -4,7 +4,7 @@ export const SITE = {
   title: "认证喵 — Campus-Auth 校园网自动认证工具",
   description:
     "认证喵（Campus-Auth）是校园网自动认证工具：支持断网自动重连与多网络配置切换，既可用真实浏览器执行复杂登录，也支持直连请求登录。账号数据仅保存在本地。",
-  version: "5.0.0",
+  version: "5.1.0",
   repo: "https://github.com/Misyra/Campus-Auth-rs",
   releaseBase: "https://github.com/Misyra/Campus-Auth-rs/releases",
   qqGroup: "1105307735",
@@ -31,7 +31,7 @@ export const FEATURES = [
   },
   {
     title: "浏览器 · 直连双渠道",
-    desc: "复杂门户用 Playwright 驱动真实浏览器；简单门户可用直连请求登录，免 Python、免浏览器。",
+    desc: "复杂门户用 Playwright 驱动真实浏览器；简单门户用可分享复用的直连任务完成认证，免 Python、免浏览器，两步式门户也能直连。",
     icon: "Layers" as const,
   },
   {

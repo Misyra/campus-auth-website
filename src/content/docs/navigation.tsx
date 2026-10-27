@@ -29,6 +29,7 @@ export const DOC_SECTIONS: DocSection[] = [
       { id: "redirect", title: "认证地址与重定向" },
       { id: "http-login", title: "直连请求登录" },
       { id: "script-login", title: "脚本登录" },
+      { id: "network-egress", title: "网络出口与代理" },
     ],
   },
   {

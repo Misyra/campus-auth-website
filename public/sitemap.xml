@@ -7,11 +7,12 @@
   <url><loc>https://campus-auth.misyra.com/docs/getting-started/start</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/getting-started/install</loc><lastmod>2026-09-19</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/getting-started/console</loc><lastmod>2026-09-27</lastmod></url>
-  <url><loc>https://campus-auth.misyra.com/docs/profiles/overview</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://campus-auth.misyra.com/docs/profiles/overview</loc><lastmod>2026-10-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/profiles/match</loc><lastmod>2026-09-19</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/profiles/redirect</loc><lastmod>2026-09-19</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/profiles/http-login</loc><lastmod>2026-09-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/profiles/script-login</loc><lastmod>2026-09-27</lastmod></url>
+  <url><loc>https://campus-auth.misyra.com/docs/profiles/network-egress</loc><lastmod>2026-10-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/tasks/concepts</loc><lastmod>2026-09-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/tasks/recorder</loc><lastmod>2026-09-28</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/tasks/browser</loc><lastmod>2026-09-27</lastmod></url>
@@ -27,7 +28,7 @@
   <url><loc>https://campus-auth.misyra.com/docs/maintenance/cli</loc><lastmod>2026-09-24</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/maintenance/files</loc><lastmod>2026-09-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/reference/settings</loc><lastmod>2026-09-19</lastmod></url>
-  <url><loc>https://campus-auth.misyra.com/docs/faq/login</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://campus-auth.misyra.com/docs/faq/login</loc><lastmod>2026-10-27</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/faq/startup</loc><lastmod>2026-09-19</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/faq/browser</loc><lastmod>2026-09-19</lastmod></url>
   <url><loc>https://campus-auth.misyra.com/docs/faq/misc</loc><lastmod>2026-09-27</lastmod></url>
